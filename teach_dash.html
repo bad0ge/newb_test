@@ -34,37 +34,67 @@
         <div class="col-md-2 p-0 sidebar shadow-sm">
             <div class="list-group list-group-flush">
                 <div class="p-3 fw-bold text-muted small bg-light text-uppercase">Quản lý Dữ liệu</div>
-                <a class="nav-link active" href="#"><i class="bi bi-question-square"></i> Ngân hàng Câu hỏi</a>
-                <a class="nav-link" href="#"><i class="bi bi-file-earmark-text"></i> Quản lý Đề thi</a>
-                <a class="nav-link" href="#"><i class="bi bi-people"></i> Quản lý Học sinh</a>
+                <a class="nav-link active" onclick="showSection('section-questions', this)"><i class="bi bi-question-square"></i> Ngân hàng Câu hỏi</a>
+                <a class="nav-link" onclick="showSection('section-exams', this)"><i class="bi bi-file-earmark-text"></i> Quản lý Đề thi</a>
+                <a class="nav-link" onclick="showSection('section-students', this)"><i class="bi bi-people"></i> Quản lý Học sinh</a>
             </div>
         </div>
 
         <div class="col-md-10 p-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                    <h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);">Ngân Hàng Câu Hỏi</h5>
-                    <button class="btn btn-theme btn-sm" onclick="openCreateModal()"><i class="bi bi-plus-circle"></i> Thêm câu hỏi mới</button>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light sticky-top">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nội dung câu hỏi</th>
-                                    <th>Độ khó</th>
-                                    <th>Loại</th>
-                                    <th class="text-end">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="questionTableBody">
-                                <tr><td colspan="5" class="text-center py-4">Đang tải dữ liệu...</td></tr>
-                            </tbody>
-                        </table>
+            
+            <div id="section-questions">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                        <h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);">Ngân Hàng Câu Hỏi</h5>
+                        <button class="btn btn-theme btn-sm" onclick="openCreateModal()"><i class="bi bi-plus-circle"></i> Thêm câu hỏi mới</button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light sticky-top">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nội dung câu hỏi</th>
+                                        <th>Độ khó</th>
+                                        <th>Loại</th>
+                                        <th class="text-end">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="questionTableBody">
+                                    <tr><td colspan="5" class="text-center py-4">Đang tải dữ liệu...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div id="section-exams" style="display: none;">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);">Quản lý Đề Thi</h5>
+                    </div>
+                    <div class="card-body text-center py-5 text-muted">
+                        <i class="bi bi-tools fs-1"></i>
+                        <h4 class="mt-3">Khu vực này đang được xây dựng</h4>
+                        <p>Sau này giáo viên có thể tạo đề thi từ ngân hàng câu hỏi tại đây.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-students" style="display: none;">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);">Quản lý Học Sinh</h5>
+                    </div>
+                    <div class="card-body text-center py-5 text-muted">
+                        <i class="bi bi-person-lines-fill fs-1"></i>
+                        <h4 class="mt-3">Khu vực này đang được xây dựng</h4>
+                        <p>Danh sách học sinh và điểm số sẽ hiển thị ở đây.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -77,11 +107,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
-                <input type="hidden" id="q_id"> <div class="mb-3">
+                <input type="hidden" id="q_id"> 
+                <div class="mb-3">
                     <label class="form-label fw-bold">Nội dung câu hỏi</label>
-                    <textarea id="q_desc" class="form-control bg-light" rows="3" placeholder="Nhập nội dung câu hỏi..."></textarea>
+                    <textarea id="q_desc" class="form-control bg-light" rows="3"></textarea>
                 </div>
-                
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Độ khó</label>
@@ -110,21 +140,36 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 1. KẾT NỐI SUPABASE
-	const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
+    // --------------------------------------------------------
+    // HÀM CHUYỂN TAB (MỚI THÊM)
+    // --------------------------------------------------------
+    function showSection(sectionId, element) {
+        // 1. Tắt màu xanh ở tất cả các nút
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        // 2. Bật màu xanh cho nút vừa được bấm
+        element.classList.add('active');
+        
+        // 3. Giấu tất cả các khu vực đi
+        document.getElementById('section-questions').style.display = 'none';
+        document.getElementById('section-exams').style.display = 'none';
+        document.getElementById('section-students').style.display = 'none';
+        
+        // 4. Chỉ hiện khu vực tương ứng với nút vừa bấm
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    // --------------------------------------------------------
+    // LOGIC KẾT NỐI SUPABASE (GIỮ NGUYÊN)
+    // --------------------------------------------------------
+    const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhpa3NnbG14YnhtZGNkcHJpYmV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzAzNjksImV4cCI6MjA5MDY0NjM2OX0.ngXTd6lCbiYdfzkcBQX1pxP42vfMNxp02ddoKyrsuz4';
-   const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+    const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
     const questionModal = new bootstrap.Modal(document.getElementById('questionModal'));
 
-    // 2. HÀM TẢI DỮ LIỆU (READ)
     async function fetchQuestions() {
         const { data, error } = await _supabase.from('question').select('*').order('questionid', { ascending: false });
-        
-        if (error) {
-            alert("Lỗi tải dữ liệu: " + error.message);
-            return;
-        }
+        if (error) { alert("Lỗi tải dữ liệu: " + error.message); return; }
 
         const tbody = document.getElementById('questionTableBody');
         tbody.innerHTML = '';
@@ -153,7 +198,6 @@
         });
     }
 
-    // 3. HÀM MỞ FORM THÊM MỚI
     function openCreateModal() {
         document.getElementById('modalTitle').innerText = 'Thêm Câu Hỏi Mới';
         document.getElementById('q_id').value = ''; 
@@ -163,7 +207,6 @@
         questionModal.show();
     }
 
-    // 4. HÀM MỞ FORM SỬA (UPDATE)
     function openEditModal(q) {
         document.getElementById('modalTitle').innerText = 'Chỉnh Sửa Câu Hỏi #' + q.questionid;
         document.getElementById('q_id').value = q.questionid;
@@ -173,50 +216,29 @@
         questionModal.show();
     }
 
-    // 5. HÀM LƯU DỮ LIỆU (CREATE & UPDATE)
     async function saveQuestion() {
         const id = document.getElementById('q_id').value;
         const desc = document.getElementById('q_desc').value;
         const diff = document.getElementById('q_diff').value;
         const type = document.getElementById('q_type').value;
 
-        if (!desc.trim()) {
-            alert("Vui lòng nhập nội dung câu hỏi!");
-            return;
-        }
+        if (!desc.trim()) { alert("Vui lòng nhập nội dung câu hỏi!"); return; }
 
-        const payload = {
-            subjectid: 1, 
-            questiondesc: desc,
-            questiondiff: diff,
-            questiontype: type
-        };
+        const payload = { subjectid: 1, questiondesc: desc, questiondiff: diff, questiontype: type };
 
         let result;
-        if (id) {
-            result = await _supabase.from('question').update(payload).eq('questionid', id);
-        } else {
-            result = await _supabase.from('question').insert([payload]);
-        }
+        if (id) { result = await _supabase.from('question').update(payload).eq('questionid', id); } 
+        else { result = await _supabase.from('question').insert([payload]); }
 
-        if (result.error) {
-            alert("Lỗi khi lưu: " + result.error.message);
-        } else {
-            questionModal.hide();
-            fetchQuestions(); 
-        }
+        if (result.error) { alert("Lỗi khi lưu: " + result.error.message); } 
+        else { questionModal.hide(); fetchQuestions(); }
     }
 
-    // 6. HÀM XÓA (DELETE)
     async function deleteQuestion(id) {
-        if (confirm("Bạn có chắc chắn muốn xóa câu hỏi #" + id + " không? Các đáp án của câu này cũng sẽ bị xóa theo.")) {
+        if (confirm("Bạn có chắc chắn muốn xóa câu hỏi #" + id + " không?")) {
             const { error } = await _supabase.from('question').delete().eq('questionid', id);
-            
-            if (error) {
-                alert("Lỗi khi xóa: " + error.message);
-            } else {
-                fetchQuestions(); 
-            }
+            if (error) { alert("Lỗi khi xóa: " + error.message); } 
+            else { fetchQuestions(); }
         }
     }
 
