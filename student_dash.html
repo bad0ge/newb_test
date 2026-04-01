@@ -6,6 +6,7 @@
     <title>Student Portal - QuizManager Pro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { --edu-blue: #0f4c81; --edu-light: #e6f0fa; }
         body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
@@ -18,15 +19,9 @@
         .btn-theme { background: var(--edu-blue); color: white; border: none; font-weight: 600; }
         .btn-theme:hover { background: #0c3d66; color: white; }
         
-        /* Custom Styles for Quiz */
-        .question-card { border-left: 4px solid var(--edu-blue); background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .answer-option { display: block; padding: 10px 15px; border: 1px solid #dee2e6; border-radius: 6px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
-        .answer-option:hover { background: #f8f9fa; }
-        .answer-option.selected { border-color: var(--edu-blue); background: var(--edu-light); font-weight: bold; }
-        
-        /* Result Styles */
-        .result-correct { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
-        .result-wrong { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        /* Custom Styles cho đáp án */
+        .result-correct { background-color: #d4edda; border-left: 5px solid #28a745; }
+        .result-wrong { background-color: #f8d7da; border-left: 5px solid #dc3545; }
     </style>
 </head>
 <body>
@@ -49,7 +44,6 @@
         </div>
 
         <div class="col-md-10 p-4">
-            
             <div id="exam-list">
                 <h4 class="fw-bold mb-4" style="color: var(--edu-blue);">CÁC KỲ THI HIỆN CÓ</h4>
                 <div class="row g-4">
@@ -59,7 +53,7 @@
                                 <span class="badge bg-success mb-2">Luyện tập (Practice)</span>
                                 <h5 class="fw-bold">Đề ôn tập THPT 12 - Lịch Sử</h5>
                                 <p class="text-muted small mb-3"><i class="bi bi-clock"></i> 60 Phút | <i class="bi bi-list-ol"></i> 40 Câu</p>
-                                <button class="btn btn-outline-success w-100" onclick="startExam(1, 'practice')">Vào thi ngay</button>
+                                <button class="btn btn-outline-success w-100">Vào thi ngay</button>
                             </div>
                         </div>
                     </div>
@@ -69,7 +63,7 @@
                                 <span class="badge bg-danger mb-2">Kỳ thi chính thức (Contest)</span>
                                 <h5 class="fw-bold">Đề thi thử lần 1 - Lịch Sử</h5>
                                 <p class="text-muted small mb-3"><i class="bi bi-clock"></i> 45 Phút | <i class="bi bi-exclamation-triangle-fill text-warning"></i> Chỉ thi 1 lần</p>
-                                <button class="btn btn-theme w-100" onclick="startExam(2, 'contest')">Vào thi ngay</button>
+                                <button class="btn btn-theme w-100">Vào thi ngay</button>
                             </div>
                         </div>
                     </div>
@@ -130,11 +124,7 @@
                                 <h1>Điểm số: <span id="modalScore" class="text-success fw-bold"></span></h1>
                                 <p id="modalNotice" class="text-muted"></p>
                             </div>
-                            
                             <div id="detailedResultArea"></div>
-                        </div>
-                        <div class="modal-footer border-0">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         </div>
                     </div>
                 </div>
@@ -146,64 +136,128 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // --------------------------------------------------------
+    // KẾT NỐI SUPABASE
+    // --------------------------------------------------------
     const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhpa3NnbG14YnhtZGNkcHJpYmV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzAzNjksImV4cCI6MjA5MDY0NjM2OX0.ngXTd6lCbiYdfzkcBQX1pxP42vfMNxp02ddoKyrsuz4';
+    const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+
     const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
 
     function showSection(sectionId, element) {
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
         element.classList.add('active');
-        
         document.getElementById('exam-list').style.display = 'none';
         document.getElementById('history').style.display = 'none';
-        
         document.getElementById(sectionId).style.display = 'block';
     }
 
-    function startExam(examId, type) {
-        alert("Chuyển hướng sang giao diện làm bài thi ID: " + examId);
-        // Ở đây bạn sẽ dùng window.location.href = 'take_exam.html?id=' + examId;
-    }
-
-    function viewResultDetail(attemptId, examType, score) {
+    // --------------------------------------------------------
+    // HÀM LẤY CHI TIẾT BÀI LÀM TỪ DATABASE
+    // --------------------------------------------------------
+    async function viewResultDetail(attemptId, examType, score) {
         document.getElementById('modalScore').innerText = score;
         const detailArea = document.getElementById('detailedResultArea');
         const noticeArea = document.getElementById('modalNotice');
         
+        resultModal.show(); // Hiện form lên ngay lập tức
+        
         if (examType === 'contest') {
-            // LOGIC QUAN TRỌNG: Kỳ thi chính thức không hiện đáp án
             noticeArea.innerHTML = "<i class='bi bi-shield-lock'></i> Vì đây là kỳ thi chính thức (Contest), chi tiết bài làm và đáp án đã bị ẩn để đảm bảo tính công bằng.";
-            detailArea.innerHTML = ""; // Xóa trắng vùng chi tiết
+            detailArea.innerHTML = "";
         } else {
-            // Kỳ thi Practice: Render chi tiết đáp án
-            noticeArea.innerHTML = "Dưới đây là chi tiết bài làm của bạn. Các đáp án sai được bôi đỏ.";
-            
-            // Giả lập dữ liệu trả về từ Database cho bảng DETAILED_RESULT
-            detailArea.innerHTML = `
-                <div class="card mb-3 border-0 shadow-sm">
-                    <div class="card-body result-correct">
-                        <h6 class="fw-bold">Câu 1: Sau chiến tranh thế giới thứ hai Mĩ thực hiện chính sách đối ngoại như thế nào?</h6>
-                        <div class="text-dark small mt-2">
-                            <i class="bi bi-check-circle-fill text-success"></i> Bạn chọn: D. Triển khai chiến lược toàn cầu với tham vọng làm bá chủ thế giới. (Đúng)
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card mb-3 border-0 shadow-sm">
-                    <div class="card-body result-wrong">
-                        <h6 class="fw-bold">Câu 2: Bản chỉ thị “Nhật- Pháp bắn nhau và hành động của chúng ta” đã xác định kẻ thù chính của nhân dân Việt Nam là</h6>
-                        <div class="text-dark small mt-2">
-                            <i class="bi bi-x-circle-fill text-danger"></i> Bạn chọn: B. Thực dân Pháp. (Sai)
-                            <br>
-                            <span class="text-success"><i class="bi bi-arrow-return-right"></i> Đáp án đúng: A. Phát xít Nhật</span>
-                        </div>
-                    </div>
-                </div>
-            `;
+            // Hiển thị hiệu ứng đang tải
+            noticeArea.innerHTML = '<div class="spinner-border spinner-border-sm text-primary"></div> Đang tải dữ liệu từ máy chủ...';
+            detailArea.innerHTML = "";
+
+            try {
+                // 1. Tìm resultID tương ứng với attemptID
+                const { data: resultData, error: err1 } = await _supabase
+                    .from('result')
+                    .select('resultid')
+                    .eq('attemptid', attemptId)
+                    .single();
+                    
+                if (err1) throw err1;
+
+                // 2. Kéo toàn bộ chi tiết câu hỏi (kèm nội dung câu hỏi và nội dung đáp án đã chọn)
+                const { data: details, error: err2 } = await _supabase
+                    .from('detailed_result')
+                    .select(`
+                        questionid,
+                        iscorrect,
+                        question!inner(questiondesc),
+                        answer!inner(answerdesc)
+                    `)
+                    .eq('resultid', resultData.resultid);
+
+                if (err2) throw err2;
+
+                // 3. Tìm các đáp án ĐÚNG của những câu hỏi này (để hiện thị nếu học sinh làm sai)
+                const questionIds = details.map(d => d.questionid);
+                const { data: correctAnswers, error: err3 } = await _supabase
+                    .from('answer')
+                    .select('questionid, answerdesc')
+                    .in('questionid', questionIds)
+                    .eq('iscorrect', true);
+
+                if (err3) throw err3;
+
+                // Gộp các đáp án đúng vào một Object để tra cứu cho nhanh
+                const correctMap = {};
+                correctAnswers.forEach(ans => {
+                    correctMap[ans.questionid] = ans.answerdesc;
+                });
+
+                // 4. Bắt đầu vẽ HTML
+                noticeArea.innerHTML = "Dưới đây là chi tiết bài làm của bạn. Các đáp án sai được bôi đỏ.";
+                let html = '';
+
+                details.forEach((item, index) => {
+                    const qDesc = item.question.questiondesc;
+                    const chosenAns = item.answer.answerdesc;
+                    const isCorrect = item.iscorrect;
+                    const realCorrectAns = correctMap[item.questionid] || "Đang cập nhật đáp án";
+
+                    if (isCorrect) {
+                        html += `
+                            <div class="card mb-3 border-0 shadow-sm result-correct">
+                                <div class="card-body">
+                                    <h6 class="fw-bold">Câu ${index + 1}: ${qDesc}</h6>
+                                    <div class="text-dark small mt-2">
+                                        <i class="bi bi-check-circle-fill text-success fs-5 align-middle"></i> 
+                                        Bạn chọn: ${chosenAns} <span class="fw-bold text-success">(Đúng)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        html += `
+                            <div class="card mb-3 border-0 shadow-sm result-wrong">
+                                <div class="card-body">
+                                    <h6 class="fw-bold">Câu ${index + 1}: ${qDesc}</h6>
+                                    <div class="text-dark small mt-2">
+                                        <i class="bi bi-x-circle-fill text-danger fs-5 align-middle"></i> 
+                                        Bạn chọn: ${chosenAns} <span class="fw-bold text-danger">(Sai)</span>
+                                        <br>
+                                        <div class="mt-2 p-2 bg-white rounded border border-success">
+                                            <span class="text-success fw-bold"><i class="bi bi-check2-square"></i> Đáp án đúng:</span> ${realCorrectAns}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                detailArea.innerHTML = html;
+
+            } catch (error) {
+                console.error("Lỗi hệ thống:", error);
+                noticeArea.innerHTML = "<span class='text-danger fw-bold'><i class='bi bi-exclamation-triangle'></i> Lỗi tải dữ liệu. Hãy kiểm tra Console (F12) để xem chi tiết.</span>";
+            }
         }
-        
-        resultModal.show();
-        
     }
 </script>
 </body>
