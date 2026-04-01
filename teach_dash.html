@@ -113,14 +113,13 @@
     // 1. KẾT NỐI SUPABASE
 	const SB_URL = 'hiksglmxbxmdcdpribex';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhpa3NnbG14YnhtZGNkcHJpYmV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzAzNjksImV4cCI6MjA5MDY0NjM2OX0.ngXTd6lCbiYdfzkcBQX1pxP42vfMNxp02ddoKyrsuz4';
-    const supabase = window.supabase.createClient(SB_URL, SB_KEY);
+   const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
     const questionModal = new bootstrap.Modal(document.getElementById('questionModal'));
 
     // 2. HÀM TẢI DỮ LIỆU (READ)
     async function fetchQuestions() {
-        // Lấy dữ liệu từ bảng QUESTION, lưu ý postgres tự động chuyển tên cột thành chữ thường (questionid, questiondesc...)
-        const { data, error } = await supabase.from('question').select('*').order('questionid', { ascending: false });
+        const { data, error } = await _supabase.from('question').select('*').order('questionid', { ascending: false });
         
         if (error) {
             alert("Lỗi tải dữ liệu: " + error.message);
@@ -157,7 +156,7 @@
     // 3. HÀM MỞ FORM THÊM MỚI
     function openCreateModal() {
         document.getElementById('modalTitle').innerText = 'Thêm Câu Hỏi Mới';
-        document.getElementById('q_id').value = ''; // Xóa ID cũ
+        document.getElementById('q_id').value = ''; 
         document.getElementById('q_desc').value = '';
         document.getElementById('q_diff').value = 'easy';
         document.getElementById('q_type').value = 'practice';
@@ -187,7 +186,7 @@
         }
 
         const payload = {
-            subjectid: 1, // Mặc định là môn Lịch sử (ID=1) theo database của bạn
+            subjectid: 1, 
             questiondesc: desc,
             questiondiff: diff,
             questiontype: type
@@ -195,35 +194,32 @@
 
         let result;
         if (id) {
-            // Nếu có ID -> SỬA (UPDATE)
-            result = await supabase.from('question').update(payload).eq('questionid', id);
+            result = await _supabase.from('question').update(payload).eq('questionid', id);
         } else {
-            // Nếu không có ID -> THÊM MỚI (INSERT)
-            result = await supabase.from('question').insert([payload]);
+            result = await _supabase.from('question').insert([payload]);
         }
 
         if (result.error) {
             alert("Lỗi khi lưu: " + result.error.message);
         } else {
             questionModal.hide();
-            fetchQuestions(); // Tải lại bảng
+            fetchQuestions(); 
         }
     }
 
     // 6. HÀM XÓA (DELETE)
     async function deleteQuestion(id) {
         if (confirm("Bạn có chắc chắn muốn xóa câu hỏi #" + id + " không? Các đáp án của câu này cũng sẽ bị xóa theo.")) {
-            const { error } = await supabase.from('question').delete().eq('questionid', id);
+            const { error } = await _supabase.from('question').delete().eq('questionid', id);
             
             if (error) {
                 alert("Lỗi khi xóa: " + error.message);
             } else {
-                fetchQuestions(); // Tải lại bảng sau khi xóa
+                fetchQuestions(); 
             }
         }
     }
 
-    // Chạy hàm tải dữ liệu ngay khi mở trang
     window.onload = fetchQuestions;
 </script>
 </body>
