@@ -21,6 +21,8 @@
         .list-group-item { cursor: pointer; transition: background 0.2s; }
         .list-group-item:hover { background-color: #f8f9fa; }
         .nowrap-text { white-space: nowrap !important; }
+        .result-correct { background-color: #d4edda; border-left: 5px solid #28a745; }
+        .result-wrong { background-color: #f8d7da; border-left: 5px solid #dc3545; }
     </style>
 </head>
 <body>
@@ -57,18 +59,7 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th>ID Môn học</th>
-                                        <th class="w-75">Tên Môn Học</th>
-                                        <th class="text-end">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="subjectTableBody">
-                                    <tr><td colspan="3" class="text-center py-4">Đang tải dữ liệu...</td></tr>
-                                </tbody>
-                            </table>
+                            <table class="table table-hover align-middle mb-0"><thead class="table-light sticky-top"><tr><th>ID</th><th class="w-75">Tên Môn Học</th><th class="text-end">Thao tác</th></tr></thead><tbody id="subjectTableBody"></tbody></table>
                         </div>
                     </div>
                 </div>
@@ -78,25 +69,11 @@
                 <div class="card shadow-sm">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
                         <h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);">Ngân Hàng Câu Hỏi</h5>
-                        <button class="btn btn-theme btn-sm" onclick="openQuestionModal()"><i class="bi bi-plus-circle"></i> Thêm câu hỏi mới</button>
+                        <button class="btn btn-theme btn-sm" onclick="openQuestionModal()"><i class="bi bi-plus-circle"></i> Thêm câu hỏi</button>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Môn học</th>
-                                        <th style="min-width: 350px;">Nội dung câu hỏi</th>
-                                        <th>Độ khó</th>
-                                        <th>Loại</th>
-                                        <th class="text-end" style="min-width: 160px;">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="questionTableBody">
-                                    <tr><td colspan="6" class="text-center py-4">Đang tải dữ liệu...</td></tr>
-                                </tbody>
-                            </table>
+                            <table class="table table-hover align-middle mb-0"><thead class="table-light sticky-top"><tr><th>ID</th><th>Môn học</th><th style="min-width: 350px;">Nội dung</th><th>Độ khó</th><th>Loại</th><th class="text-end" style="min-width: 160px;">Thao tác</th></tr></thead><tbody id="questionTableBody"></tbody></table>
                         </div>
                     </div>
                 </div>
@@ -110,23 +87,7 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Môn học</th>
-                                        <th style="min-width: 200px;">Tên đề thi</th>
-                                        <th>Loại</th>
-                                        <th>T/g Bắt đầu</th>
-                                        <th>T/g Kết thúc</th>
-                                        <th>Thời lượng</th>
-                                        <th class="text-end" style="min-width: 150px;">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="examTableBody">
-                                    <tr><td colspan="8" class="text-center py-4">Đang tải dữ liệu...</td></tr>
-                                </tbody>
-                            </table>
+                            <table class="table table-hover align-middle mb-0"><thead class="table-light sticky-top"><tr><th>ID</th><th>Môn học</th><th style="min-width: 200px;">Tên đề thi</th><th>Loại</th><th>T/g Mở</th><th>T/g Đóng</th><th class="text-end" style="min-width: 250px;">Thao tác</th></tr></thead><tbody id="examTableBody"></tbody></table>
                         </div>
                     </div>
                 </div>
@@ -134,51 +95,15 @@
             
             <div id="section-teachers" style="display: none;">
                 <div class="card shadow-sm border-top border-primary border-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);"><i class="bi bi-person-badge"></i> Danh Sách Giáo Viên</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th>Mã GV (ID)</th>
-                                        <th class="nowrap-text">Họ và Tên</th>
-                                        <th class="nowrap-text">Tài khoản (Username)</th>
-                                        <th class="nowrap-text">Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="teacherTableBody">
-                                    <tr><td colspan="4" class="text-center py-4">Đang tải dữ liệu...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div class="card-header bg-white py-3"><h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);"><i class="bi bi-person-badge"></i> Danh Sách Giáo Viên</h5></div>
+                    <div class="card-body p-0"><div class="table-responsive" style="max-height: 70vh; overflow-y: auto;"><table class="table table-hover align-middle mb-0"><thead class="table-light sticky-top"><tr><th>ID</th><th class="nowrap-text">Họ và Tên</th><th class="nowrap-text">Tài khoản</th><th class="nowrap-text">Email</th></tr></thead><tbody id="teacherTableBody"></tbody></table></div></div>
                 </div>
             </div>
 
             <div id="section-students" style="display: none;">
                 <div class="card shadow-sm border-top border-success border-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);"><i class="bi bi-people"></i> Danh Sách Học Sinh</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th>Mã HS (ID)</th>
-                                        <th class="nowrap-text">Họ và Tên</th>
-                                        <th class="nowrap-text">Tài khoản (Username)</th>
-                                        <th class="nowrap-text">Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="studentTableBody">
-                                    <tr><td colspan="4" class="text-center py-4">Đang tải dữ liệu...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div class="card-header bg-white py-3"><h5 class="mb-0 fw-bold text-uppercase" style="color: var(--edu-blue);"><i class="bi bi-people"></i> Danh Sách Học Sinh</h5></div>
+                    <div class="card-body p-0"><div class="table-responsive" style="max-height: 70vh; overflow-y: auto;"><table class="table table-hover align-middle mb-0"><thead class="table-light sticky-top"><tr><th>ID</th><th class="nowrap-text">Họ và Tên</th><th class="nowrap-text">Tài khoản</th><th class="nowrap-text">Email</th></tr></thead><tbody id="studentTableBody"></tbody></table></div></div>
                 </div>
             </div>
 
@@ -187,147 +112,60 @@
 </div>
 
 <div class="modal fade" id="subjectModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title fw-bold" style="color: var(--edu-blue);" id="subModalTitle">Thêm Môn Học</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <input type="hidden" id="sub_id"> 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Tên Môn Học</label>
-                    <input type="text" id="sub_name" class="form-control bg-light" placeholder="Ví dụ: Toán 12, Lịch sử...">
-                </div>
-            </div>
-            <div class="modal-footer bg-light border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-theme" onclick="saveSubject()">Lưu môn học</button>
-            </div>
-        </div>
-    </div>
+    <div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-light"><h5 class="modal-title fw-bold" style="color: var(--edu-blue);" id="subModalTitle">Thêm Môn Học</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4"><input type="hidden" id="sub_id"><div class="mb-3"><label class="form-label fw-bold">Tên Môn Học</label><input type="text" id="sub_name" class="form-control bg-light"></div></div>
+        <div class="modal-footer bg-light border-0"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-theme" onclick="saveSubject()">Lưu môn học</button></div>
+    </div></div>
 </div>
 
 <div class="modal fade" id="questionModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title fw-bold" style="color: var(--edu-blue);" id="qModalTitle">Thêm Câu Hỏi Mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <input type="hidden" id="q_id"> 
-                
-                <div class="mb-3">
-                    <label class="form-label fw-bold text-primary">Môn học</label>
-                    <select id="q_subject" class="form-select border-primary bg-light">
-                        </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Nội dung câu hỏi</label>
-                    <textarea id="q_desc" class="form-control bg-light" rows="3"></textarea>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Độ khó</label>
-                        <select id="q_diff" class="form-select bg-light">
-                            <option value="easy">Dễ (Easy)</option>
-                            <option value="medium">Trung bình (Medium)</option>
-                            <option value="hard">Khó (Hard)</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Loại đề</label>
-                        <select id="q_type" class="form-select bg-light">
-                            <option value="practice">Luyện tập (Practice)</option>
-                            <option value="contest">Thi chính thức (Contest)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer bg-light border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-theme" onclick="saveQuestion()">Lưu câu hỏi</button>
+    <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-light"><h5 class="modal-title fw-bold" style="color: var(--edu-blue);" id="qModalTitle">Thêm Câu Hỏi Mới</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4">
+            <input type="hidden" id="q_id">
+            <div class="mb-3"><label class="form-label fw-bold text-primary">Môn học</label><select id="q_subject" class="form-select bg-light"></select></div>
+            <div class="mb-3"><label class="form-label fw-bold">Nội dung câu hỏi</label><textarea id="q_desc" class="form-control bg-light" rows="3"></textarea></div>
+            <div class="row">
+                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Độ khó</label><select id="q_diff" class="form-select bg-light"><option value="easy">Dễ</option><option value="medium">Trung bình</option><option value="hard">Khó</option></select></div>
+                <div class="col-md-6 mb-3"><label class="form-label fw-bold">Loại đề</label><select id="q_type" class="form-select bg-light"><option value="practice">Luyện tập</option><option value="contest">Thi chính thức</option></select></div>
             </div>
         </div>
-    </div>
+        <div class="modal-footer bg-light border-0"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-theme" onclick="saveQuestion()">Lưu câu hỏi</button></div>
+    </div></div>
 </div>
 
 <div class="modal fade" id="examModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title fw-bold" style="color: var(--edu-blue);" id="eModalTitle">Tạo Đề Thi Mới</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-light"><h5 class="modal-title fw-bold" style="color: var(--edu-blue);" id="eModalTitle">Tạo Đề Thi Mới</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4">
+            <input type="hidden" id="e_id">
+            <div class="mb-3"><label class="form-label fw-bold text-primary">Môn học</label><select id="e_subject" class="form-select bg-light"></select></div>
+            <div class="mb-3"><label class="form-label fw-bold">Tiêu đề kỳ thi</label><input type="text" id="e_title" class="form-control bg-light"></div>
+            <div class="row">
+                <div class="col-md-6 mb-3"><label class="form-label fw-bold text-success"><i class="bi bi-play-circle"></i> T/g mở đề</label><input type="datetime-local" id="e_start" class="form-control bg-light"></div>
+                <div class="col-md-6 mb-3"><label class="form-label fw-bold text-danger"><i class="bi bi-stop-circle"></i> Hạn chót</label><input type="datetime-local" id="e_end" class="form-control bg-light"></div>
             </div>
-            <div class="modal-body p-4">
-                <input type="hidden" id="e_id"> 
-                
-                <div class="mb-3">
-                    <label class="form-label fw-bold text-primary">Môn học</label>
-                    <select id="e_subject" class="form-select border-primary bg-light">
-                        </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Tiêu đề kỳ thi</label>
-                    <input type="text" id="e_title" class="form-control bg-light">
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-success"><i class="bi bi-play-circle"></i> Thời gian mở đề</label>
-                        <input type="datetime-local" id="e_start" class="form-control bg-light">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold text-danger"><i class="bi bi-stop-circle"></i> Hạn chót (Đóng đề)</label>
-                        <input type="datetime-local" id="e_end" class="form-control bg-light">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label fw-bold">Loại kỳ thi</label>
-                        <select id="e_type" class="form-select bg-light">
-                            <option value="practice">Luyện tập</option>
-                            <option value="contest">Thi chính thức</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label fw-bold">Thời gian (Phút)</label>
-                        <input type="number" id="e_duration" class="form-control bg-light" value="45" min="1">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="form-label fw-bold">Số lần thi tối đa</label>
-                        <input type="number" id="e_max" class="form-control bg-light" value="1" min="1">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer bg-light border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-theme" onclick="saveExam()">Lưu thông tin đề thi</button>
+            <div class="row">
+                <div class="col-md-4 mb-3"><label class="form-label fw-bold">Loại</label><select id="e_type" class="form-select bg-light"><option value="practice">Luyện tập</option><option value="contest">Thi chính thức</option></select></div>
+                <div class="col-md-4 mb-3"><label class="form-label fw-bold">T/g (Phút)</label><input type="number" id="e_duration" class="form-control bg-light" value="45"></div>
+                <div class="col-md-4 mb-3"><label class="form-label fw-bold">Lượt thi tối đa</label><input type="number" id="e_max" class="form-control bg-light" value="1"></div>
             </div>
         </div>
-    </div>
+        <div class="modal-footer bg-light border-0"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-theme" onclick="saveExam()">Lưu đề thi</button></div>
+    </div></div>
 </div>
 
 <div class="modal fade" id="examQuestionsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-light">
-                <h5 class="modal-title fw-bold" style="color: var(--edu-blue);">Quản lý Câu hỏi trong Đề thi</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4">
-                <input type="hidden" id="eq_exam_id">
-                <div class="mb-3"><input type="text" id="eq_search" class="form-control border-primary" placeholder="🔍 Gõ từ khóa để tìm nhanh câu hỏi..." onkeyup="filterQuestions()"></div>
-                <div class="list-group" id="eq_list"></div>
-            </div>
-            <div class="modal-footer bg-light border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-success" onclick="saveExamQuestions()"><i class="bi bi-check-circle"></i> Lưu danh sách câu hỏi</button>
-            </div>
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-light"><h5 class="modal-title fw-bold" style="color: var(--edu-blue);">Quản lý Câu hỏi trong Đề thi</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4">
+            <input type="hidden" id="eq_exam_id">
+            <div class="mb-3"><input type="text" id="eq_search" class="form-control border-primary" placeholder="🔍 Gõ từ khóa tìm kiếm..." onkeyup="filterQuestions()"></div>
+            <div class="list-group" id="eq_list"></div>
         </div>
-    </div>
+        <div class="modal-footer bg-light border-0"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-success" onclick="saveExamQuestions()"><i class="bi bi-check-circle"></i> Lưu danh sách</button></div>
+    </div></div>
 </div>
 
 <div class="modal fade" id="answerModal" tabindex="-1">
@@ -338,208 +176,412 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
-                <div class="alert alert-primary border-0 shadow-sm mb-4" id="ans_q_desc"></div>
+                <div class="alert alert-primary shadow-sm mb-4" id="ans_q_desc"></div>
                 <input type="hidden" id="ans_q_id">
+                
                 <div class="d-flex gap-2 mb-4">
-                    <input type="text" id="new_ans_desc" class="form-control border-primary" placeholder="Nhập nội dung đáp án mới...">
+                    <input type="text" id="new_ans_desc" class="form-control border-primary" placeholder="Nhập đáp án mới...">
                     <div class="form-check form-switch d-flex align-items-center">
-                        <input class="form-check-input fs-4 mt-0 me-2" type="checkbox" id="new_ans_correct" role="switch">
+                        <input class="form-check-input fs-4 mt-0 me-2" type="checkbox" id="new_ans_correct">
                         <label class="form-check-label fw-bold text-success nowrap-text">Là Đ.Án Đúng</label>
                     </div>
                     <button class="btn btn-theme nowrap-text" onclick="addAnswer()"><i class="bi bi-plus-lg"></i> Thêm</button>
                 </div>
+                
                 <h6 class="fw-bold mb-3 text-muted">DANH SÁCH ĐÁP ÁN:</h6>
-                <div class="list-group" id="ans_list"></div>
+                <div class="list-group mb-4" id="ans_list"></div>
+
+                <div class="alert alert-warning border-0 d-flex justify-content-between align-items-center mb-0">
+                    <div>
+                        <strong class="text-dark"><i class="bi bi-exclamation-triangle-fill text-warning"></i> Chú ý:</strong><br>
+                        <span class="small text-muted">Nếu bạn vừa thay đổi đáp án đúng, hãy bấm nút bên cạnh để hệ thống cập nhật lại điểm.</span>
+                    </div>
+                    <button class="btn btn-warning fw-bold text-dark nowrap-text" onclick="regradeQuestion()" id="btnRegrade">
+                        <i class="bi bi-arrow-clockwise"></i> Chấm lại điểm
+                    </button>
+                </div>
+                
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="structureModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-light"><h5 class="modal-title fw-bold" style="color: var(--edu-blue);">Cấu trúc Đề thi</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4">
+            <input type="hidden" id="struct_exam_id"> 
+            <p class="text-muted small">Thiết lập số lượng câu hỏi theo từng mức độ khó cho đề thi này.</p>
+            <div class="row">
+                <div class="col-4 mb-3"><label class="form-label fw-bold text-success">Dễ</label><input type="number" id="struct_easy" class="form-control bg-light" value="0" min="0"></div>
+                <div class="col-4 mb-3"><label class="form-label fw-bold text-warning">T.Bình</label><input type="number" id="struct_medium" class="form-control bg-light" value="0" min="0"></div>
+                <div class="col-4 mb-3"><label class="form-label fw-bold text-danger">Khó</label><input type="number" id="struct_hard" class="form-control bg-light" value="0" min="0"></div>
+            </div>
+            <div class="alert alert-info py-2 mt-2">Tổng số câu: <strong id="struct_total">0</strong></div>
+        </div>
+        <div class="modal-footer bg-light border-0"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-warning" onclick="saveStructure()">Lưu Cấu Trúc</button></div>
+    </div></div>
+</div>
+
+<div class="modal fade" id="attemptsModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"><div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-light"><h5 class="modal-title fw-bold" style="color: var(--edu-blue);">Theo dõi Lượt thi</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0"><thead class="table-light sticky-top"><tr><th>Học sinh</th><th>Lần thi</th><th>Trạng thái</th><th>Bắt đầu</th><th>Nộp bài</th><th>Điểm số</th><th class="text-end">Chi tiết</th></tr></thead><tbody id="attemptsTableBody"></tbody></table>
+            </div>
+        </div>
+    </div></div>
+</div>
+
+<div class="modal fade" id="teacherResultModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-dark text-white"><h5 class="modal-title fw-bold">Chi tiết Bài làm của Học sinh</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body bg-light">
+            <div class="text-center mb-4"><h3>Điểm số: <span id="t_modalScore" class="text-success fw-bold"></span></h3></div>
+            <div id="t_detailedResultArea"></div>
+        </div>
+    </div></div>
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // --------------------------------------------------------
     // KẾT NỐI SUPABASE
     // --------------------------------------------------------
-	const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
+const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhpa3NnbG14YnhtZGNkcHJpYmV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzAzNjksImV4cCI6MjA5MDY0NjM2OX0.ngXTd6lCbiYdfzkcBQX1pxP42vfMNxp02ddoKyrsuz4';
     const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
+    // KHỞI TẠO TẤT CẢ CÁC MODAL
     const subjectModalInstance = new bootstrap.Modal(document.getElementById('subjectModal'));
     const questionModalInstance = new bootstrap.Modal(document.getElementById('questionModal'));
     const examModalInstance = new bootstrap.Modal(document.getElementById('examModal'));
     const examQuestionsModalInstance = new bootstrap.Modal(document.getElementById('examQuestionsModal'));
     const answerModalInstance = new bootstrap.Modal(document.getElementById('answerModal'));
+    const structureModalInstance = new bootstrap.Modal(document.getElementById('structureModal'));
+    const attemptsModalInstance = new bootstrap.Modal(document.getElementById('attemptsModal'));
+    const teacherResultModalInstance = new bootstrap.Modal(document.getElementById('teacherResultModal'));
 
+    // HÀM TIỆN ÍCH (Định dạng ngày tháng)
     function formatDateTimeLocal(isoString) { if (!isoString) return ''; const d = new Date(isoString); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 16); }
-    function displayDate(isoString) { if (!isoString) return '<span class="text-muted">Không giới hạn</span>'; const d = new Date(isoString); return d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}); }
+    function displayDate(isoString) { if (!isoString) return '<span class="text-muted">-</span>'; const d = new Date(isoString); return d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}); }
 
+    // HÀM CHUYỂN TAB MENU
     function showSection(sectionId, element) {
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active')); element.classList.add('active');
-        document.getElementById('section-subjects').style.display = 'none';
-        document.getElementById('section-questions').style.display = 'none';
-        document.getElementById('section-exams').style.display = 'none';
-        document.getElementById('section-teachers').style.display = 'none';
-        document.getElementById('section-students').style.display = 'none';
+        ['section-subjects','section-questions','section-exams','section-teachers','section-students'].forEach(id => { document.getElementById(id).style.display = 'none'; });
         document.getElementById(sectionId).style.display = 'block';
     }
 
+    // Tự động tính tổng số câu trong Cấu trúc đề thi
+    ['struct_easy', 'struct_medium', 'struct_hard'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            const e = parseInt(document.getElementById('struct_easy').value) || 0;
+            const m = parseInt(document.getElementById('struct_medium').value) || 0;
+            const h = parseInt(document.getElementById('struct_hard').value) || 0;
+            document.getElementById('struct_total').innerText = e + m + h;
+        });
+    });
+
     // ========================================================
-    // QUẢN LÝ MÔN HỌC
+    // QUẢN LÝ MÔN HỌC (SUBJECTS)
     // ========================================================
     async function fetchSubjects() {
-        const { data, error } = await _supabase.from('subject').select('*').order('subjectid', { ascending: true });
-        if (error) { console.error(error); return; }
-        
+        const { data } = await _supabase.from('subject').select('*').order('subjectid', { ascending: true });
         const tbody = document.getElementById('subjectTableBody'); tbody.innerHTML = '';
-        if (data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4">Chưa có môn học nào.</td></tr>'; }
-        else {
+        if (data && data.length > 0) {
             data.forEach(s => {
-                tbody.innerHTML += `<tr>
-                    <td class="fw-bold text-muted">#${s.subjectid}</td>
-                    <td class="fw-bold text-primary">${s.subjectname}</td>
-                    <td class="text-end">
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditSubjectModal(${s.subjectid}, '${s.subjectname}')"><i class="bi bi-pencil-square"></i></button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject(${s.subjectid})"><i class="bi bi-trash3"></i></button>
-                    </td>
-                </tr>`;
+                tbody.innerHTML += `<tr><td class="fw-bold text-muted">#${s.subjectid}</td><td class="fw-bold text-primary">${s.subjectname}</td>
+                <td class="text-end"><button class="btn btn-sm btn-outline-primary me-1" onclick="openEditSubjectModal(${s.subjectid}, '${s.subjectname}')"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deleteSubject(${s.subjectid})"><i class="bi bi-trash3"></i></button></td></tr>`;
             });
         }
-
-        let optionsHtml = data.map(s => `<option value="${s.subjectid}">${s.subjectname}</option>`).join('');
-        if(optionsHtml === '') optionsHtml = '<option value="" disabled selected>Vui lòng tạo môn học trước</option>';
-        document.getElementById('q_subject').innerHTML = optionsHtml;
-        document.getElementById('e_subject').innerHTML = optionsHtml;
+        let opts = data ? data.map(s => `<option value="${s.subjectid}">${s.subjectname}</option>`).join('') : '';
+        document.getElementById('q_subject').innerHTML = opts || '<option value="" disabled selected>Tạo môn học trước</option>';
+        document.getElementById('e_subject').innerHTML = opts || '<option value="" disabled selected>Tạo môn học trước</option>';
     }
-
     function openSubjectModal() { document.getElementById('subModalTitle').innerText = 'Thêm Môn Học'; document.getElementById('sub_id').value = ''; document.getElementById('sub_name').value = ''; subjectModalInstance.show(); }
-    function openEditSubjectModal(id, name) { document.getElementById('subModalTitle').innerText = 'Sửa Môn Học #' + id; document.getElementById('sub_id').value = id; document.getElementById('sub_name').value = name; subjectModalInstance.show(); }
-    
-    async function saveSubject() {
-        const id = document.getElementById('sub_id').value;
-        const name = document.getElementById('sub_name').value;
-        if (!name.trim()) return alert("Vui lòng nhập tên môn học!");
-        
-        let result = id ? await _supabase.from('subject').update({subjectname: name}).eq('subjectid', id) : await _supabase.from('subject').insert([{subjectname: name}]);
-        if (result.error) alert("Lỗi: " + result.error.message);
-        else { subjectModalInstance.hide(); fetchSubjects(); fetchQuestions(); fetchExams(); } 
-    }
-    
-    async function deleteSubject(id) {
-        if (confirm("CẢNH BÁO: Xóa môn học này sẽ xóa TOÀN BỘ câu hỏi và đề thi thuộc môn này. Bạn có chắc chắn không?")) {
-            await _supabase.from('subject').delete().eq('subjectid', id);
-            fetchSubjects(); fetchQuestions(); fetchExams();
-        }
-    }
+    function openEditSubjectModal(id, name) { document.getElementById('subModalTitle').innerText = 'Sửa Môn Học'; document.getElementById('sub_id').value = id; document.getElementById('sub_name').value = name; subjectModalInstance.show(); }
+    async function saveSubject() { const id = document.getElementById('sub_id').value; const name = document.getElementById('sub_name').value; if(!name) return; id ? await _supabase.from('subject').update({subjectname: name}).eq('subjectid', id) : await _supabase.from('subject').insert([{subjectname: name}]); subjectModalInstance.hide(); fetchSubjects(); fetchQuestions(); fetchExams(); }
+    async function deleteSubject(id) { if(confirm("CẢNH BÁO: Xóa môn học sẽ xóa toàn bộ câu hỏi và đề thi. Tiếp tục?")) { await _supabase.from('subject').delete().eq('subjectid', id); fetchSubjects(); fetchQuestions(); fetchExams(); } }
 
     // ========================================================
-    // QUẢN LÝ CÂU HỎI
+    // QUẢN LÝ CÂU HỎI (QUESTIONS)
     // ========================================================
     async function fetchQuestions() {
         const { data } = await _supabase.from('question').select('*, subject(subjectname)').order('questionid', { ascending: false });
         const tbody = document.getElementById('questionTableBody'); tbody.innerHTML = '';
-        data.forEach(q => {
-            const badgeColor = q.questiondiff === 'easy' ? 'success' : (q.questiondiff === 'medium' ? 'warning' : 'danger');
+        if(data) data.forEach(q => {
+            const badge = q.questiondiff === 'easy' ? 'success' : (q.questiondiff === 'medium' ? 'warning' : 'danger');
             const safeDesc = q.questiondesc.replace(/'/g, "\\'").replace(/"/g, "&quot;").replace(/\n/g, " ");
-            const subjectName = q.subject ? q.subject.subjectname : "Không xác định";
-
-            tbody.innerHTML += `<tr>
-                <td class="fw-bold text-muted">#${q.questionid}</td>
-                <td><span class="badge bg-secondary">${subjectName}</span></td>
-                <td>${q.questiondesc}</td>
-                <td><span class="badge bg-${badgeColor}">${q.questiondiff.toUpperCase()}</span></td>
-                <td><span class="badge bg-${q.questiontype === 'contest' ? 'danger' : 'primary'}">${q.questiontype.toUpperCase()}</span></td>
-                <td class="text-end text-nowrap">
-                    <button class="btn btn-sm btn-outline-info me-1" title="Quản lý đáp án" onclick="openAnswerModal(${q.questionid}, '${safeDesc}')"><i class="bi bi-ui-checks"></i></button>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick='openEditQuestionModal(${JSON.stringify(q)})'><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteQuestion(${q.questionid})"><i class="bi bi-trash3"></i></button>
-                </td>
-            </tr>`;
+            tbody.innerHTML += `<tr><td class="fw-bold text-muted">#${q.questionid}</td><td><span class="badge bg-secondary">${q.subject?.subjectname || '-'}</span></td><td>${q.questiondesc}</td><td><span class="badge bg-${badge}">${q.questiondiff.toUpperCase()}</span></td><td><span class="badge bg-${q.questiontype === 'contest' ? 'danger' : 'primary'}">${q.questiontype.toUpperCase()}</span></td>
+            <td class="text-end text-nowrap"><button class="btn btn-sm btn-outline-info me-1" onclick="openAnswerModal(${q.questionid}, '${safeDesc}')"><i class="bi bi-ui-checks"></i></button>
+            <button class="btn btn-sm btn-outline-primary me-1" onclick='openEditQuestionModal(${JSON.stringify(q)})'><i class="bi bi-pencil-square"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteQuestion(${q.questionid})"><i class="bi bi-trash3"></i></button></td></tr>`;
         });
     }
-
     function openQuestionModal() { document.getElementById('qModalTitle').innerText = 'Thêm Câu Hỏi Mới'; document.getElementById('q_id').value = ''; document.getElementById('q_desc').value = ''; questionModalInstance.show(); }
     function openEditQuestionModal(q) { document.getElementById('qModalTitle').innerText = 'Sửa Câu Hỏi #' + q.questionid; document.getElementById('q_id').value = q.questionid; document.getElementById('q_subject').value = q.subjectid; document.getElementById('q_desc').value = q.questiondesc; document.getElementById('q_diff').value = q.questiondiff; document.getElementById('q_type').value = q.questiontype; questionModalInstance.show(); }
-    async function saveQuestion() { const id = document.getElementById('q_id').value; const payload = { subjectid: document.getElementById('q_subject').value, questiondesc: document.getElementById('q_desc').value, questiondiff: document.getElementById('q_diff').value, questiontype: document.getElementById('q_type').value }; if (!payload.questiondesc.trim()) return; let res = id ? await _supabase.from('question').update(payload).eq('questionid', id) : await _supabase.from('question').insert([payload]); questionModalInstance.hide(); fetchQuestions(); }
-    async function deleteQuestion(id) { if (confirm("Xóa câu hỏi này cùng các đáp án của nó?")) { await _supabase.from('question').delete().eq('questionid', id); fetchQuestions(); } }
-
+    async function saveQuestion() { const id = document.getElementById('q_id').value; const payload = { subjectid: document.getElementById('q_subject').value, questiondesc: document.getElementById('q_desc').value, questiondiff: document.getElementById('q_diff').value, questiontype: document.getElementById('q_type').value }; if(!payload.questiondesc) return; id ? await _supabase.from('question').update(payload).eq('questionid', id) : await _supabase.from('question').insert([payload]); questionModalInstance.hide(); fetchQuestions(); }
+    async function deleteQuestion(id) { if(confirm("Xóa câu hỏi này?")) { await _supabase.from('question').delete().eq('questionid', id); fetchQuestions(); } }
 
     // ========================================================
-    // QUẢN LÝ ĐỀ THI
+    // QUẢN LÝ ĐÁP ÁN (ANSWERS)
+    // ========================================================
+    async function openAnswerModal(qid, qdesc) { document.getElementById('ans_q_id').value = qid; document.getElementById('ans_q_desc').innerHTML = `<strong>Câu hỏi #${qid}:</strong> ${qdesc}`; document.getElementById('new_ans_desc').value = ''; document.getElementById('new_ans_correct').checked = false; await fetchAnswers(qid); answerModalInstance.show(); }
+    async function fetchAnswers(qid) { const listDiv = document.getElementById('ans_list'); listDiv.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>'; const { data } = await _supabase.from('answer').select('*').eq('questionid', qid).order('answerid', {ascending: true}); if (!data || data.length === 0) { listDiv.innerHTML = '<div class="text-muted text-center py-2">Chưa có đáp án</div>'; return; } listDiv.innerHTML = data.map(a => `<div class="list-group-item d-flex justify-content-between align-items-center"><label class="d-flex align-items-center flex-grow-1 me-3 mb-0" style="cursor:pointer;"><input class="form-check-input fs-5 me-3 flex-shrink-0" type="radio" name="correct_ans" ${a.iscorrect ? 'checked' : ''} onchange="setCorrectAnswer(${a.answerid}, ${qid})"><span class="${a.iscorrect ? 'text-success fw-bold' : ''}">${a.answerdesc}</span></label><button class="btn btn-sm btn-outline-danger flex-shrink-0" onclick="deleteAnswer(${a.answerid}, ${qid})"><i class="bi bi-trash"></i></button></div>`).join(''); }
+    async function addAnswer() { const qid = document.getElementById('ans_q_id').value; const desc = document.getElementById('new_ans_desc').value; const isCorrect = document.getElementById('new_ans_correct').checked; if(!desc) return; if(isCorrect) await _supabase.from('answer').update({iscorrect: false}).eq('questionid', qid); await _supabase.from('answer').insert([{questionid: qid, answerdesc: desc, iscorrect: isCorrect}]); document.getElementById('new_ans_desc').value = ''; fetchAnswers(qid); }
+    async function setCorrectAnswer(ansId, qid) { await _supabase.from('answer').update({iscorrect: false}).eq('questionid', qid); await _supabase.from('answer').update({iscorrect: true}).eq('answerid', ansId); fetchAnswers(qid); }
+    async function deleteAnswer(ansId, qid) { if(confirm("Xóa đáp án này?")) { await _supabase.from('answer').delete().eq('answerid', ansId); fetchAnswers(qid); } }
+	// HÀM CHẤM LẠI ĐIỂM KHI ĐỔI ĐÁP ÁN
+   async function regradeQuestion() {
+        const qid = parseInt(document.getElementById('ans_q_id').value);
+        const btn = document.getElementById('btnRegrade');
+        
+        if (!confirm("Hệ thống sẽ quét và chấm lại điểm cho TẤT CẢ các lượt thi có chứa câu hỏi này. Bạn có chắc chắn?")) return;
+
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang xử lý...';
+        btn.disabled = true;
+
+        try {
+            // Bước 1: Tìm ID của đáp án đúng HIỆN TẠI
+            const { data: correctAns, error: err1 } = await _supabase.from('answer')
+                .select('answerid').eq('questionid', qid).eq('iscorrect', true).single();
+                
+            if (err1 || !correctAns) throw new Error("Vui lòng chọn 1 đáp án đúng trước khi chấm lại!");
+            const correctId = correctAns.answerid;
+
+            // Bước 2: Kéo dữ liệu bài làm chi tiết
+            const { data: details, error: err2 } = await _supabase.from('detailed_result')
+                .select('resultid, answerid').eq('questionid', qid);
+                
+            if (err2) throw new Error("LỖI TÌM BÀI LÀM: " + err2.message);
+            if (!details || details.length === 0) throw new Error(`Câu hỏi #${qid} chưa có học sinh nào làm.`);
+
+            // Bước 3: Cập nhật lại Đúng/Sai cho từng câu hỏi chi tiết
+            const uniqueResultIds = new Set(); 
+            for (const d of details) {
+                const isCorrectNow = (d.answerid === correctId); 
+                const { error: err3 } = await _supabase.from('detailed_result')
+                    .update({ iscorrect: isCorrectNow })
+                    .eq('resultid', d.resultid)
+                    .eq('questionid', qid); 
+                if (err3) throw new Error("LỖI LƯU TRẠNG THÁI: " + err3.message);
+                
+                // Gom các ID bài thi bị ảnh hưởng lại để tính tổng điểm
+                uniqueResultIds.add(d.resultid); 
+            }
+
+            // Bước 4: TÍNH LẠI VÀ CẬP NHẬT ĐIỂM TỔNG (GRADE)
+            for (const rid of uniqueResultIds) {
+                // Kéo toàn bộ đáp án của bài thi này về
+                const { data: allAnswers, error: err4 } = await _supabase.from('detailed_result')
+                    .select('iscorrect').eq('resultid', rid);
+                if (err4) throw new Error("LỖI TẢI ĐIỂM TỔNG: " + err4.message);
+                
+                // Thực hiện phép tính thang điểm 10
+                const totalQuestions = allAnswers.length;
+                const correctCount = allAnswers.filter(a => a.iscorrect).length; 
+                const newGrade = (correctCount / totalQuestions) * 10;
+
+                // Ghi đè điểm mới vào Database
+                const { error: err5 } = await _supabase.from('result')
+                    .update({ grade: newGrade }).eq('resultid', rid);
+                if (err5) throw new Error("LỖI LƯU ĐIỂM TỔNG: " + err5.message);
+            }
+
+            alert(`🎉 Chấm lại thành công! Đã cập nhật điểm số mới cho ${uniqueResultIds.size} bài thi.`);
+            
+        } catch (error) {
+            alert("❌ LỖI:\n" + error.message);
+            console.error(error);
+        } finally {
+            btn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Chấm lại điểm';
+            btn.disabled = false;
+        }
+    }
+
+    // ========================================================
+    // QUẢN LÝ ĐỀ THI (EXAMS)
     // ========================================================
     async function fetchExams() { 
         const { data } = await _supabase.from('exam').select('*, subject(subjectname)').order('examid', { ascending: false });
         const tbody = document.getElementById('examTableBody'); tbody.innerHTML = '';
-        data.forEach(e => {
-            const typeBadge = e.examtype === 'contest' ? 'danger' : 'success';
-            const subjectName = e.subject ? e.subject.subjectname : "Không xác định";
-            tbody.innerHTML += `<tr>
-                <td class="fw-bold text-muted">#${e.examid}</td>
-                <td><span class="badge bg-secondary">${subjectName}</span></td>
-                <td class="fw-bold">${e.examtitle}</td>
-                <td><span class="badge bg-${typeBadge}">${e.examtype.toUpperCase()}</span></td>
-                <td class="small">${displayDate(e.starttime)}</td>
-                <td class="small">${displayDate(e.endtime)}</td>
-                <td>${e.examduration}p</td>
-                <td class="text-end text-nowrap">
-                    <button class="btn btn-sm btn-outline-success me-1" title="Quản lý câu hỏi" onclick="openExamQuestionsModal(${e.examid}, ${e.subjectid})"><i class="bi bi-list-check"></i></button>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick='openEditExamModal(${JSON.stringify(e)})'><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteExam(${e.examid})"><i class="bi bi-trash3"></i></button>
-                </td>
-            </tr>`;
+        if(data) data.forEach(e => {
+            const badge = e.examtype === 'contest' ? 'danger' : 'success';
+            tbody.innerHTML += `<tr><td class="fw-bold text-muted">#${e.examid}</td><td><span class="badge bg-secondary">${e.subject?.subjectname||'-'}</span></td><td class="fw-bold">${e.examtitle}</td><td><span class="badge bg-${badge}">${e.examtype.toUpperCase()}</span></td><td class="small">${displayDate(e.starttime)}</td><td class="small">${displayDate(e.endtime)}</td>
+            <td class="text-end text-nowrap">
+                <button class="btn btn-sm btn-outline-warning me-1" title="Cấu trúc" onclick="openStructureModal(${e.examid})"><i class="bi bi-pie-chart"></i></button>
+                <button class="btn btn-sm btn-outline-info me-1" title="Lượt thi" onclick="openAttemptsModal(${e.examid})"><i class="bi bi-clipboard-data"></i></button>
+                <button class="btn btn-sm btn-outline-success me-1" title="Gắn câu hỏi" onclick="openExamQuestionsModal(${e.examid}, ${e.subjectid})"><i class="bi bi-list-check"></i></button>
+                <button class="btn btn-sm btn-outline-primary me-1" title="Sửa" onclick='openEditExamModal(${JSON.stringify(e)})'><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-outline-danger" title="Xóa" onclick="deleteExam(${e.examid})"><i class="bi bi-trash3"></i></button>
+            </td></tr>`;
         });
     }
-
     function openExamModal() { document.getElementById('eModalTitle').innerText = 'Tạo Đề Thi Mới'; document.getElementById('e_id').value = ''; document.getElementById('e_title').value = ''; document.getElementById('e_start').value = ''; document.getElementById('e_end').value = ''; examModalInstance.show(); }
-    function openEditExamModal(e) { document.getElementById('eModalTitle').innerText = 'Sửa Đề Thi #' + e.examid; document.getElementById('e_id').value = e.examid; document.getElementById('e_subject').value = e.subjectid; document.getElementById('e_title').value = e.examtitle; document.getElementById('e_type').value = e.examtype; document.getElementById('e_duration').value = e.examduration; document.getElementById('e_max').value = e.maxattempt; document.getElementById('e_start').value = formatDateTimeLocal(e.starttime); document.getElementById('e_end').value = formatDateTimeLocal(e.endtime); examModalInstance.show(); }
-    async function saveExam() { const id = document.getElementById('e_id').value; const payload = { subjectid: document.getElementById('e_subject').value, accountid: 2, examtitle: document.getElementById('e_title').value, examtype: document.getElementById('e_type').value, examduration: document.getElementById('e_duration').value, maxattempt: document.getElementById('e_max').value, starttime: document.getElementById('e_start').value || null, endtime: document.getElementById('e_end').value || null }; if (!payload.examtitle.trim()) return; let res = id ? await _supabase.from('exam').update(payload).eq('examid', id) : await _supabase.from('exam').insert([payload]); examModalInstance.hide(); fetchExams(); }
-    async function deleteExam(id) { if (confirm("Xóa đề thi này?")) { await _supabase.from('exam').delete().eq('examid', id); fetchExams(); } }
+    function openEditExamModal(e) { document.getElementById('eModalTitle').innerText = 'Sửa Đề Thi'; document.getElementById('e_id').value = e.examid; document.getElementById('e_subject').value = e.subjectid; document.getElementById('e_title').value = e.examtitle; document.getElementById('e_type').value = e.examtype; document.getElementById('e_duration').value = e.examduration; document.getElementById('e_max').value = e.maxattempt; document.getElementById('e_start').value = formatDateTimeLocal(e.starttime); document.getElementById('e_end').value = formatDateTimeLocal(e.endtime); examModalInstance.show(); }
+    async function saveExam() { const id = document.getElementById('e_id').value; const payload = { subjectid: document.getElementById('e_subject').value, accountid: 2, examtitle: document.getElementById('e_title').value, examtype: document.getElementById('e_type').value, examduration: document.getElementById('e_duration').value, maxattempt: document.getElementById('e_max').value, starttime: document.getElementById('e_start').value || null, endtime: document.getElementById('e_end').value || null }; if(!payload.examtitle) return; id ? await _supabase.from('exam').update(payload).eq('examid', id) : await _supabase.from('exam').insert([payload]); examModalInstance.hide(); fetchExams(); }
+    async function deleteExam(id) { if(confirm("Xóa đề thi này?")) { await _supabase.from('exam').delete().eq('examid', id); fetchExams(); } }
+
+    // ========================================================
+    // CẤU TRÚC ĐỀ (STRUCTURE) & GẮN CÂU HỎI (EXAM_QUESTIONS)
+    // ========================================================
+    async function openStructureModal(examId) {
+        document.getElementById('struct_exam_id').value = examId;
+        const { data } = await _supabase.from('exam_structure').select('*').eq('examid', examId).single();
+        if (data) { document.getElementById('struct_easy').value = data.totaleasy; document.getElementById('struct_medium').value = data.totalmedium; document.getElementById('struct_hard').value = data.totalhard; document.getElementById('struct_total').innerText = data.totaleasy + data.totalmedium + data.totalhard; } 
+        else { document.getElementById('struct_easy').value = 0; document.getElementById('struct_medium').value = 0; document.getElementById('struct_hard').value = 0; document.getElementById('struct_total').innerText = 0; }
+        structureModalInstance.show();
+    }
+    async function saveStructure() { const examId = document.getElementById('struct_exam_id').value; const e = parseInt(document.getElementById('struct_easy').value)||0; const m = parseInt(document.getElementById('struct_medium').value)||0; const h = parseInt(document.getElementById('struct_hard').value)||0; await _supabase.from('exam_structure').delete().eq('examid', examId); await _supabase.from('exam_structure').insert([{ examid: examId, totaleasy: e, totalmedium: m, totalhard: h }]); structureModalInstance.hide(); alert("Lưu cấu trúc thành công!"); }
 
     async function openExamQuestionsModal(examId, subjectId) {
         document.getElementById('eq_exam_id').value = examId; const listDiv = document.getElementById('eq_list'); listDiv.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>'; examQuestionsModalInstance.show();
         const { data: allQuestions } = await _supabase.from('question').select('*').eq('subjectid', subjectId).order('questionid', {ascending: false});
         const { data: selected } = await _supabase.from('exam_question').select('questionid').eq('examid', examId);
         const selectedIds = selected ? selected.map(s => s.questionid) : [];
-        if(allQuestions.length === 0) { listDiv.innerHTML = '<div class="text-center text-muted py-4">Chưa có câu hỏi nào thuộc môn này trong ngân hàng.</div>'; return; }
+        if(!allQuestions || allQuestions.length===0) { listDiv.innerHTML = '<div class="text-center text-muted py-4">Chưa có câu hỏi.</div>'; return; }
         listDiv.innerHTML = allQuestions.map(q => `<label class="list-group-item d-flex gap-3 align-items-center"><input class="form-check-input flex-shrink-0 eq-checkbox" type="checkbox" value="${q.questionid}" style="width: 1.5em; height: 1.5em;" ${selectedIds.includes(q.questionid) ? 'checked' : ''}><span><span class="fw-bold text-primary">[#${q.questionid}]</span> <span class="eq-qtext">${q.questiondesc}</span></span></label>`).join('');
     }
     function filterQuestions() { const term = document.getElementById('eq_search').value.toLowerCase(); document.querySelectorAll('#eq_list label').forEach(label => { const text = label.querySelector('.eq-qtext').innerText.toLowerCase(); label.style.display = text.includes(term) ? 'flex' : 'none'; }); }
-    async function saveExamQuestions() { const examId = document.getElementById('eq_exam_id').value; const checkboxes = document.querySelectorAll('.eq-checkbox:checked'); const selectedIds = Array.from(checkboxes).map(cb => parseInt(cb.value)); await _supabase.from('exam_question').delete().eq('examid', examId); if (selectedIds.length > 0) { const inserts = selectedIds.map((qid, index) => ({ examid: examId, questionid: qid, questionorder: index + 1 })); await _supabase.from('exam_question').insert(inserts); } examQuestionsModalInstance.hide(); alert(`Đã lưu ${selectedIds.length} câu hỏi vào đề thi!`); }
+    async function saveExamQuestions() { const examId = document.getElementById('eq_exam_id').value; const checkboxes = document.querySelectorAll('.eq-checkbox:checked'); const selectedIds = Array.from(checkboxes).map(cb => parseInt(cb.value)); await _supabase.from('exam_question').delete().eq('examid', examId); if(selectedIds.length > 0) { const inserts = selectedIds.map((qid, index) => ({ examid: examId, questionid: qid, questionorder: index + 1 })); await _supabase.from('exam_question').insert(inserts); } examQuestionsModalInstance.hide(); alert(`Đã lưu ${selectedIds.length} câu hỏi!`); }
 
     // ========================================================
-    // QUẢN LÝ ĐÁP ÁN 
+    // THEO DÕI LƯỢT THI (ATTEMPTS) VÀ KẾT QUẢ CHI TIẾT
     // ========================================================
-    async function openAnswerModal(qid, qdesc) { document.getElementById('ans_q_id').value = qid; document.getElementById('ans_q_desc').innerHTML = `<strong>Câu hỏi #${qid}:</strong> ${qdesc}`; document.getElementById('new_ans_desc').value = ''; document.getElementById('new_ans_correct').checked = false; await fetchAnswers(qid); answerModalInstance.show(); }
-    async function fetchAnswers(qid) { const listDiv = document.getElementById('ans_list'); listDiv.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>'; const { data } = await _supabase.from('answer').select('*').eq('questionid', qid).order('answerid', {ascending: true}); if (data.length === 0) { listDiv.innerHTML = '<div class="text-center text-muted py-4"><i class="bi bi-inbox fs-1"></i><br>Chưa có đáp án nào. Hãy thêm ở bên trên!</div>'; return; } listDiv.innerHTML = data.map(a => `<div class="list-group-item d-flex justify-content-between align-items-center"><label class="d-flex align-items-center flex-grow-1 me-3 mb-0" style="cursor:pointer;"><input class="form-check-input fs-5 me-3 flex-shrink-0" type="radio" name="correct_ans" ${a.iscorrect ? 'checked' : ''} onchange="setCorrectAnswer(${a.answerid}, ${qid})"><span class="${a.iscorrect ? 'text-success fw-bold' : ''}">${a.answerdesc}</span></label><button class="btn btn-sm btn-outline-danger flex-shrink-0" onclick="deleteAnswer(${a.answerid}, ${qid})"><i class="bi bi-trash"></i></button></div>`).join(''); }
-    async function addAnswer() { const qid = document.getElementById('ans_q_id').value; const desc = document.getElementById('new_ans_desc').value; const isCorrect = document.getElementById('new_ans_correct').checked; if (!desc.trim()) return alert("Vui lòng nhập nội dung!"); if (isCorrect) await _supabase.from('answer').update({ iscorrect: false }).eq('questionid', qid); await _supabase.from('answer').insert([{ questionid: qid, answerdesc: desc, iscorrect: isCorrect }]); document.getElementById('new_ans_desc').value = ''; document.getElementById('new_ans_correct').checked = false; fetchAnswers(qid); }
-    async function setCorrectAnswer(ansId, qid) { await _supabase.from('answer').update({ iscorrect: false }).eq('questionid', qid); await _supabase.from('answer').update({ iscorrect: true }).eq('answerid', ansId); fetchAnswers(qid); }
-    async function deleteAnswer(ansId, qid) { if(confirm("Xóa đáp án này?")) { await _supabase.from('answer').delete().eq('answerid', ansId); fetchAnswers(qid); } }
+	async function viewDetailedResult(attemptId, stu, score) {
+        document.getElementById('t_modalScore').innerText = `${score} (HS: ${stu})`; 
+        const detailArea = document.getElementById('t_detailedResultArea'); 
+        detailArea.innerHTML = '<div class="text-center py-5"><div class="spinner-border text-primary"></div></div>'; 
+        teacherResultModalInstance.show();
+
+        try {
+            // 1. Lấy ID kết quả tổng quát
+            const { data: resData, error: err1 } = await _supabase.from('result').select('resultid').eq('attemptid', attemptId).single();
+            if (err1 || !resData) throw new Error("Không tìm thấy kết quả tổng điểm của lượt thi này.");
+
+            // 2. Kéo dữ liệu chi tiết từng câu
+            const { data: details, error: err2 } = await _supabase.from('detailed_result')
+                .select('questionid, iscorrect, question!inner(questiondesc), answer!inner(answerdesc)')
+                .eq('resultid', resData.resultid);
+            if (err2) throw new Error(err2.message);
+
+            // BẮT LỖI Ở ĐÂY: Nếu dữ liệu mẫu bị trống (Không có câu nào)
+            if (!details || details.length === 0) {
+                detailArea.innerHTML = `
+                    <div class="alert alert-warning text-center">
+                        <i class="bi bi-exclamation-circle fs-1"></i><br>
+                        <strong>Chưa có dữ liệu chi tiết!</strong><br>
+                        Hệ thống chỉ ghi nhận điểm tổng, không có bản ghi chi tiết các câu học sinh đã chọn (Do dữ liệu mẫu SQL bị thiếu).
+                    </div>`;
+                return; // Dừng lại, không chạy code bên dưới nữa
+            }
+
+            // 3. Lấy đáp án đúng (Chỉ chạy khi details có dữ liệu)
+            const qIds = details.map(d => d.questionid);
+            const { data: correctAns, error: err3 } = await _supabase.from('answer')
+                .select('questionid, answerdesc')
+                .in('questionid', qIds)
+                .eq('iscorrect', true);
+            if (err3) throw new Error(err3.message);
+
+            const correctMap = {}; 
+            correctAns.forEach(a => correctMap[a.questionid] = a.answerdesc);
+
+            // 4. Vẽ HTML hiển thị
+            let html = '';
+            details.forEach((item, index) => {
+                if (item.iscorrect) {
+                    html += `
+                        <div class="card mb-3 border-0 shadow-sm result-correct">
+                            <div class="card-body">
+                                <h6 class="fw-bold">Câu ${index + 1}: ${item.question.questiondesc}</h6>
+                                <div class="small mt-2"><i class="bi bi-check-circle-fill text-success"></i> HS chọn: ${item.answer.answerdesc} (Đúng)</div>
+                            </div>
+                        </div>`;
+                } else {
+                    html += `
+                        <div class="card mb-3 border-0 shadow-sm result-wrong">
+                            <div class="card-body">
+                                <h6 class="fw-bold">Câu ${index + 1}: ${item.question.questiondesc}</h6>
+                                <div class="small mt-2">
+                                    <i class="bi bi-x-circle-fill text-danger"></i> HS chọn: ${item.answer.answerdesc} (Sai)<br>
+                                    <span class="text-success fw-bold"><i class="bi bi-check2-square"></i> Đáp án đúng:</span> ${correctMap[item.questionid] || '-'}
+                                </div>
+                            </div>
+                        </div>`;
+                }
+            });
+            detailArea.innerHTML = html;
+        } catch (e) {
+            detailArea.innerHTML = '<div class="alert alert-danger"><i class="bi bi-x-octagon-fill"></i> Lỗi tải bài làm: ' + e.message + '</div>';
+        }
+    }
+   async function openAttemptsModal(examId) {
+        attemptsModalInstance.show(); 
+        const tbody = document.getElementById('attemptsTableBody'); 
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4"><div class="spinner-border text-primary"></div></td></tr>';
+
+        // ĐÃ SỬA LỖI 400 BAD REQUEST: Chỉ rõ đường đi student(account(accountname))
+        const { data, error } = await _supabase.from('exam_attempt')
+            .select('attemptid, attemptnumber, submitstatus, startedtime, submittedtime, student(account(accountname)), result(grade)')
+            .eq('examid', examId)
+            .order('startedtime', { ascending: false });
+
+        if (error) { 
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Lỗi tải dữ liệu: ${error.message}</td></tr>`; 
+            console.error(error); // In lỗi ra F12 để dễ theo dõi
+            return; 
+        }
+        
+        if (data.length === 0) { 
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">Chưa có học sinh nào làm đề này.</td></tr>'; 
+            return; 
+        }
+
+        tbody.innerHTML = data.map(att => {
+            // ĐÃ SỬA LẠI: Cách bóc tách dữ liệu theo đúng đường đi mới
+            const stu = att.student?.account?.accountname || 'Không xác định'; 
+            
+            const stat = att.submitstatus === 'submitted' ? '<span class="badge bg-success">Đã nộp</span>' : '<span class="badge bg-warning text-dark">Đang làm</span>';
+            const score = (att.result && att.result.length > 0 && att.result[0].grade !== null) ? parseFloat(att.result[0].grade).toFixed(2) : '-';
+            
+            return `<tr>
+                <td class="fw-bold text-primary">${stu}</td>
+                <td>Lần ${att.attemptnumber}</td>
+                <td>${stat}</td>
+                <td class="small">${displayDate(att.startedtime)}</td>
+                <td class="small">${displayDate(att.submittedtime)}</td>
+                <td class="fw-bold text-danger">${score}</td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-outline-primary" ${att.submitstatus !== 'submitted' ? 'disabled' : ''} onclick="viewDetailedResult(${att.attemptid}, '${stu}', '${score}')"><i class="bi bi-eye"></i> Xem bài</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
 
     // ========================================================
     // DANH SÁCH GIÁO VIÊN VÀ HỌC SINH
     // ========================================================
     async function fetchTeachers() {
-        // Chỉ lấy những tài khoản có role là teacher
         const { data } = await _supabase.from('account').select('*').eq('accountrole', 'teacher').order('accountid', { ascending: true });
         const tbody = document.getElementById('teacherTableBody'); tbody.innerHTML = '';
-        data.forEach(t => {
-            tbody.innerHTML += `<tr><td class="fw-bold text-muted">#${t.accountid}</td><td class="fw-bold text-primary nowrap-text">${t.accountname}</td><td class="nowrap-text"><i class="bi bi-person text-muted"></i> ${t.accountusername}</td><td class="nowrap-text"><i class="bi bi-envelope text-muted"></i> ${t.accountemail}</td></tr>`;
-        });
+        if(data) data.forEach(t => { tbody.innerHTML += `<tr><td class="fw-bold text-muted">#${t.accountid}</td><td class="fw-bold text-primary nowrap-text">${t.accountname}</td><td class="nowrap-text"><i class="bi bi-person text-muted"></i> ${t.accountusername}</td><td class="nowrap-text"><i class="bi bi-envelope text-muted"></i> ${t.accountemail}</td></tr>`; });
     }
-
     async function fetchStudents() {
         const { data } = await _supabase.from('account').select('*').eq('accountrole', 'student').order('accountid', { ascending: true });
         const tbody = document.getElementById('studentTableBody'); tbody.innerHTML = '';
-        data.forEach(s => {
-            tbody.innerHTML += `<tr><td class="fw-bold text-muted">#${s.accountid}</td><td class="fw-bold text-success nowrap-text">${s.accountname}</td><td class="nowrap-text"><i class="bi bi-person text-muted"></i> ${s.accountusername}</td><td class="nowrap-text"><i class="bi bi-envelope text-muted"></i> ${s.accountemail}</td></tr>`;
-        });
+        if(data) data.forEach(s => { tbody.innerHTML += `<tr><td class="fw-bold text-muted">#${s.accountid}</td><td class="fw-bold text-success nowrap-text">${s.accountname}</td><td class="nowrap-text"><i class="bi bi-person text-muted"></i> ${s.accountusername}</td><td class="nowrap-text"><i class="bi bi-envelope text-muted"></i> ${s.accountemail}</td></tr>`; });
     }
 
-    // KHỞI ĐỘNG HỆ THỐNG
+    // KHỞI ĐỘNG TẤT CẢ
     window.onload = async function() { 
         await fetchSubjects(); 
         fetchQuestions(); 
         fetchExams(); 
-        fetchTeachers(); // Load danh sách GV
+        fetchTeachers();
         fetchStudents(); 
     };
 </script>
