@@ -175,15 +175,48 @@
 </div>
 
 <div class="modal fade" id="examQuestionsModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content border-0 shadow-lg">
-        <div class="modal-header bg-light"><h5 class="modal-title fw-bold" style="color: var(--edu-blue);">Quản lý Câu hỏi trong Đề thi</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-        <div class="modal-body p-4">
-            <input type="hidden" id="eq_exam_id">
-            <div class="mb-3"><input type="text" id="eq_search" class="form-control border-primary" placeholder="🔍 Gõ từ khóa tìm kiếm..." onkeyup="filterQuestions()"></div>
-            <div class="list-group" id="eq_list"></div>
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold" style="color: var(--edu-blue);">Thiết lập Câu hỏi Đề thi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <input type="hidden" id="eq_exam_id">
+                
+                <div class="row g-2 mb-3 text-center">
+                    <div class="col-4">
+                        <div class="p-2 border rounded bg-light">
+                            <div class="small fw-bold text-success">DỄ</div>
+                            <span id="cnt_easy" class="fw-bold">0/0</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-2 border rounded bg-light">
+                            <div class="small fw-bold text-warning">T.BÌNH</div>
+                            <span id="cnt_medium" class="fw-bold">0/0</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-2 border rounded bg-light">
+                            <div class="small fw-bold text-danger">KHÓ</div>
+                            <span id="cnt_hard" class="fw-bold">0/0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <input type="text" id="eq_search" class="form-control border-primary" placeholder="🔍 Tìm nhanh nội dung câu hỏi..." onkeyup="filterQuestions()">
+                </div>
+                <div class="list-group" id="eq_list"></div>
+            </div>
+            <div class="modal-footer bg-light border-0">
+                <div id="eq_warning" class="me-auto text-danger small fw-bold"></div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-success" onclick="saveExamQuestions()"><i class="bi bi-check-circle"></i> Lưu danh sách</button>
+            </div>
         </div>
-        <div class="modal-footer bg-light border-0"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button><button type="button" class="btn btn-success" onclick="saveExamQuestions()"><i class="bi bi-check-circle"></i> Lưu danh sách</button></div>
-    </div></div>
+    </div>
 </div>
 
 <div class="modal fade" id="answerModal" tabindex="-1">
@@ -524,13 +557,79 @@ const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
     }
     async function saveStructure() { const examId = document.getElementById('struct_exam_id').value; const e = parseInt(document.getElementById('struct_easy').value)||0; const m = parseInt(document.getElementById('struct_medium').value)||0; const h = parseInt(document.getElementById('struct_hard').value)||0; await _supabase.from('exam_structure').delete().eq('examid', examId); await _supabase.from('exam_structure').insert([{ examid: examId, totaleasy: e, totalmedium: m, totalhard: h }]); structureModalInstance.hide(); alert("Lưu cấu trúc thành công!"); }
 
+    let currentLimits = { easy: 0, medium: 0, hard: 0 };
+
     async function openExamQuestionsModal(examId, subjectId) {
-        document.getElementById('eq_exam_id').value = examId; const listDiv = document.getElementById('eq_list'); listDiv.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>'; examQuestionsModalInstance.show();
+        document.getElementById('eq_exam_id').value = examId;
+        const listDiv = document.getElementById('eq_list');
+        listDiv.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>';
+        examQuestionsModalInstance.show();
+
+        // 1. Lấy giới hạn từ bảng exam_structure
+        const { data: struct } = await _supabase.from('exam_structure').select('*').eq('examid', examId).single();
+        currentLimits = struct ? { easy: struct.totaleasy, medium: struct.totalmedium, hard: struct.totalhard } : { easy: 0, medium: 0, hard: 0 };
+        
+        // Hiển thị mẫu giới hạn (ví dụ: 0/5)
+        document.getElementById('cnt_easy').innerText = `0/${currentLimits.easy}`;
+        document.getElementById('cnt_medium').innerText = `0/${currentLimits.medium}`;
+        document.getElementById('cnt_hard').innerText = `0/${currentLimits.hard}`;
+
+        // 2. Lấy danh sách câu hỏi và những câu đã được chọn
         const { data: allQuestions } = await _supabase.from('question').select('*').eq('subjectid', subjectId).order('questionid', {ascending: false});
         const { data: selected } = await _supabase.from('exam_question').select('questionid').eq('examid', examId);
         const selectedIds = selected ? selected.map(s => s.questionid) : [];
-        if(!allQuestions || allQuestions.length===0) { listDiv.innerHTML = '<div class="text-center text-muted py-4">Chưa có câu hỏi.</div>'; return; }
-        listDiv.innerHTML = allQuestions.map(q => `<label class="list-group-item d-flex gap-3 align-items-center"><input class="form-check-input flex-shrink-0 eq-checkbox" type="checkbox" value="${q.questionid}" style="width: 1.5em; height: 1.5em;" ${selectedIds.includes(q.questionid) ? 'checked' : ''}><span><span class="fw-bold text-primary">[#${q.questionid}]</span> <span class="eq-qtext">${q.questiondesc}</span></span></label>`).join('');
+
+        // 3. Hiển thị danh sách câu hỏi kèm theo nhãn độ khó
+        listDiv.innerHTML = allQuestions.map(q => {
+            const diffClass = q.questiondiff === 'easy' ? 'success' : (q.questiondiff === 'medium' ? 'warning' : 'danger');
+            const isChecked = selectedIds.includes(q.questionid) ? 'checked' : '';
+            
+            return `
+                <label class="list-group-item d-flex gap-3 align-items-center">
+                    <input class="form-check-input flex-shrink-0 eq-checkbox" type="checkbox" 
+                           data-diff="${q.questiondiff}" value="${q.questionid}" 
+                           onchange="updateExamCounters()" ${isChecked}>
+                    <div class="flex-grow-1">
+                        <span class="badge bg-${diffClass} mb-1">${q.questiondiff.toUpperCase()}</span><br>
+                        <span class="fw-bold text-primary">[#${q.questionid}]</span> <span class="eq-qtext">${q.questiondesc}</span>
+                    </div>
+                </label>`;
+        }).join('');
+
+        // Cập nhật bộ đếm lần đầu tiên sau khi load xong
+        updateExamCounters();
+    }
+
+    // Hàm tự động cập nhật bộ đếm khi giáo viên tích chọn câu hỏi
+    function updateExamCounters() {
+        const checkboxes = document.querySelectorAll('.eq-checkbox:checked');
+        const counts = { easy: 0, medium: 0, hard: 0 };
+        
+        checkboxes.forEach(cb => {
+            const diff = cb.getAttribute('data-diff');
+            if (counts[diff] !== undefined) counts[diff]++;
+        });
+
+        // Cập nhật hiển thị và đổi màu nếu vượt quá giới hạn
+        const updateUI = (type, current, limit) => {
+            const el = document.getElementById(`cnt_${type}`);
+            el.innerText = `${current}/${limit}`;
+            el.parentElement.className = `p-2 border rounded ${current > limit && limit > 0 ? 'bg-danger text-white' : 'bg-light'}`;
+        };
+
+        updateUI('easy', counts.easy, currentLimits.easy);
+        updateUI('medium', counts.medium, currentLimits.medium);
+        updateUI('hard', counts.hard, currentLimits.hard);
+
+        // Hiển thị cảnh báo tổng quát
+        const warning = document.getElementById('eq_warning');
+        if ((counts.easy > currentLimits.easy && currentLimits.easy > 0) || 
+            (counts.medium > currentLimits.medium && currentLimits.medium > 0) || 
+            (counts.hard > currentLimits.hard && currentLimits.hard > 0)) {
+            warning.innerText = "⚠ Số lượng câu hỏi đang vượt giới hạn cấu trúc!";
+        } else {
+            warning.innerText = "";
+        }
     }
     function filterQuestions() { const term = document.getElementById('eq_search').value.toLowerCase(); document.querySelectorAll('#eq_list label').forEach(label => { const text = label.querySelector('.eq-qtext').innerText.toLowerCase(); label.style.display = text.includes(term) ? 'flex' : 'none'; }); }
     async function saveExamQuestions() { const examId = document.getElementById('eq_exam_id').value; const checkboxes = document.querySelectorAll('.eq-checkbox:checked'); const selectedIds = Array.from(checkboxes).map(cb => parseInt(cb.value)); await _supabase.from('exam_question').delete().eq('examid', examId); if(selectedIds.length > 0) { const inserts = selectedIds.map((qid, index) => ({ examid: examId, questionid: qid, questionorder: index + 1 })); await _supabase.from('exam_question').insert(inserts); } examQuestionsModalInstance.hide(); alert(`Đã lưu ${selectedIds.length} câu hỏi!`); }
