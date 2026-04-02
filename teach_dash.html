@@ -534,7 +534,10 @@ const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
             <td class="text-end text-nowrap">
                 <button class="btn btn-sm btn-outline-warning me-1" title="Cấu trúc" onclick="openStructureModal(${e.examid})"><i class="bi bi-pie-chart"></i></button>
                 <button class="btn btn-sm btn-outline-info me-1" title="Lượt thi" onclick="openAttemptsModal(${e.examid})"><i class="bi bi-clipboard-data"></i></button>
-                <button class="btn btn-sm btn-outline-success me-1" title="Gắn câu hỏi" onclick="openExamQuestionsModal(${e.examid}, ${e.subjectid})"><i class="bi bi-list-check"></i></button>
+                <button class="btn btn-sm btn-outline-success me-1" title="Gắn câu hỏi" 
+        onclick="openExamQuestionsModal(${e.examid}, ${e.subjectid}, '${e.examtype}')">
+    <i class="bi bi-list-check"></i>
+</button>
                 <button class="btn btn-sm btn-outline-primary me-1" title="Sửa" onclick='openEditExamModal(${JSON.stringify(e)})'><i class="bi bi-pencil-square"></i></button>
                 <button class="btn btn-sm btn-outline-danger" title="Xóa" onclick="deleteExam(${e.examid})"><i class="bi bi-trash3"></i></button>
             </td></tr>`;
@@ -557,9 +560,10 @@ const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
     }
     async function saveStructure() { const examId = document.getElementById('struct_exam_id').value; const e = parseInt(document.getElementById('struct_easy').value)||0; const m = parseInt(document.getElementById('struct_medium').value)||0; const h = parseInt(document.getElementById('struct_hard').value)||0; await _supabase.from('exam_structure').delete().eq('examid', examId); await _supabase.from('exam_structure').insert([{ examid: examId, totaleasy: e, totalmedium: m, totalhard: h }]); structureModalInstance.hide(); alert("Lưu cấu trúc thành công!"); }
 
+    // CHỈ KHAI BÁO 1 LẦN DUY NHẤT Ở ĐÂY
     let currentLimits = { easy: 0, medium: 0, hard: 0 };
 
-    async function openExamQuestionsModal(examId, subjectId) {
+    async function openExamQuestionsModal(examId, subjectId, examType) {
         document.getElementById('eq_exam_id').value = examId;
         const listDiv = document.getElementById('eq_list');
         listDiv.innerHTML = '<div class="text-center py-3"><div class="spinner-border text-primary"></div></div>';
@@ -569,17 +573,31 @@ const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
         const { data: struct } = await _supabase.from('exam_structure').select('*').eq('examid', examId).single();
         currentLimits = struct ? { easy: struct.totaleasy, medium: struct.totalmedium, hard: struct.totalhard } : { easy: 0, medium: 0, hard: 0 };
         
-        // Hiển thị mẫu giới hạn (ví dụ: 0/5)
-        document.getElementById('cnt_easy').innerText = `0/${currentLimits.easy}`;
-        document.getElementById('cnt_medium').innerText = `0/${currentLimits.medium}`;
-        document.getElementById('cnt_hard').innerText = `0/${currentLimits.hard}`;
+        // 2. Lấy danh sách câu hỏi CÙNG MÔN HỌC và CÙNG LOẠI (Practice/Contest)
+        const { data: allQuestions, error: errQ } = await _supabase.from('question')
+            .select('*')
+            .eq('subjectid', subjectId)
+            .eq('questiontype', examType) 
+            .order('questionid', {ascending: false});
 
-        // 2. Lấy danh sách câu hỏi và những câu đã được chọn
-        const { data: allQuestions } = await _supabase.from('question').select('*').eq('subjectid', subjectId).order('questionid', {ascending: false});
         const { data: selected } = await _supabase.from('exam_question').select('questionid').eq('examid', examId);
         const selectedIds = selected ? selected.map(s => s.questionid) : [];
 
-        // 3. Hiển thị danh sách câu hỏi kèm theo nhãn độ khó
+        if (!allQuestions || allQuestions.length === 0) {
+            listDiv.innerHTML = `<div class="alert alert-info text-center mt-3">
+                Không có câu hỏi loại <strong>${examType.toUpperCase()}</strong> cho môn học này trong ngân hàng.
+            </div>`;
+            // Reset bộ đếm về 0
+            document.getElementById('cnt_easy').innerText = `0/${currentLimits.easy}`;
+            document.getElementById('cnt_medium').innerText = `0/${currentLimits.medium}`;
+            document.getElementById('cnt_hard').innerText = `0/${currentLimits.hard}`;
+            
+            // Xóa cảnh báo nếu có
+            document.getElementById('eq_warning').innerText = "";
+            return;
+        }
+
+        // 3. Hiển thị danh sách câu hỏi đã lọc
         listDiv.innerHTML = allQuestions.map(q => {
             const diffClass = q.questiondiff === 'easy' ? 'success' : (q.questiondiff === 'medium' ? 'warning' : 'danger');
             const isChecked = selectedIds.includes(q.questionid) ? 'checked' : '';
@@ -596,7 +614,7 @@ const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
                 </label>`;
         }).join('');
 
-        // Cập nhật bộ đếm lần đầu tiên sau khi load xong
+        // 4. Gọi hàm cập nhật bộ đếm
         updateExamCounters();
     }
 
