@@ -3,128 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Portal - QuizManager Pro</title>
+    <title>Student - WIP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --edu-blue: #0f4c81; --edu-light: #e6f0fa; }
+        :root { --edu-green: #20c997; --edu-light: #e6fdf6; }
         body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
-        .navbar { background-color: var(--edu-blue); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .navbar { background-color: var(--edu-green); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .sidebar { background: white; min-height: 100vh; border-right: 1px solid #ddd; position: sticky; top: 0; }
         .nav-link { color: #333; font-weight: 500; padding: 12px 20px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: 0.2s; }
-        .nav-link:hover { background: var(--edu-light); color: var(--edu-blue); }
-        .nav-link.active { background: var(--edu-blue) !important; color: white !important; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .btn-theme { background: var(--edu-blue); color: white; border: none; font-weight: 600; }
-        .btn-theme:hover { background: #0c3d66; color: white; }
-        
-        /* Custom Styles cho đáp án */
-        .result-correct { background-color: #d4edda; border-left: 5px solid #28a745; }
-        .result-wrong { background-color: #f8d7da; border-left: 5px solid #dc3545; }
+        .nav-link:hover { background: var(--edu-light); color: var(--edu-green); }
+        .nav-link.active { background: var(--edu-green) !important; color: white !important; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: transform 0.2s;}
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .btn-theme { background: var(--edu-green); color: white; border: none; }
+        .btn-theme:hover { background: #1aa179; color: white; }
+        .nowrap-text { white-space: nowrap !important; }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-dark shadow-sm sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#"><i class="bi bi-mortarboard-fill"></i> QUIZMANAGER PRO - HỌC SINH</a>
-        <div class="text-white small d-none d-md-block">Xin chào, Trần Bình Nguyên</div>
+        <a class="navbar-brand fw-bold" href="#"><i class="bi bi-mortarboard-fill"></i> HỌC SINH - FREAKY TEST SYSTEM</a>
+        <div class="text-white fw-bold d-none d-md-block" id="topNavName">Xin chào, ...</div>
     </div>
 </nav>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 p-0 sidebar shadow-sm">
-            <div class="list-group list-group-flush" id="tableMenu">
-                <div class="p-3 fw-bold text-muted small bg-light text-uppercase">Bảng Điều Khiển</div>
-                <a class="nav-link active" onclick="showSection('exam-list', this)"><i class="bi bi-card-list"></i> Danh sách Đề thi</a>
-                <a class="nav-link" onclick="showSection('history', this)"><i class="bi bi-clock-history"></i> Lịch sử làm bài</a>
+            <div class="list-group list-group-flush mt-3">
+                <a class="nav-link active" onclick="showSection('section-home', this)"><i class="bi bi-house-door"></i> Tổng quan cá nhân</a>
+                <a class="nav-link" onclick="showSection('section-exams', this)"><i class="bi bi-journal-code"></i> Đề thi của tôi</a>
+                <a class="nav-link" onclick="showSection('section-history', this)"><i class="bi bi-clock-history"></i> Lịch sử làm bài</a>
             </div>
         </div>
 
         <div class="col-md-10 p-4">
-            <div id="exam-list">
-                <h4 class="fw-bold mb-4" style="color: var(--edu-blue);">CÁC KỲ THI HIỆN CÓ</h4>
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <div class="card h-100 border-top border-success border-4">
-                            <div class="card-body">
-                                <span class="badge bg-success mb-2">Luyện tập (Practice)</span>
-                                <h5 class="fw-bold">Đề ôn tập THPT 12 - Lịch Sử</h5>
-                                <p class="text-muted small mb-3"><i class="bi bi-clock"></i> 60 Phút | <i class="bi bi-list-ol"></i> 40 Câu</p>
-                                <button class="btn btn-outline-success w-100">Vào thi ngay</button>
+            
+            <div id="section-home">
+                <h4 class="fw-bold mb-4" style="color: var(--edu-green);">Tổng quan Hồ sơ</h4>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card p-4 h-100 border-top border-success border-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-light rounded-circle p-3 me-3 text-success"><i class="bi bi-person-bounding-box fs-1"></i></div>
+                                <div>
+                                    <h5 class="fw-bold mb-0" id="profileName">Đang tải...</h5>
+                                    <span class="text-muted small">Học sinh ID: #<span id="profileId"></span></span>
+                                </div>
                             </div>
+                            <hr>
+                            <p class="mb-1 text-muted"><i class="bi bi-person-badge"></i> Tài khoản: <strong class="text-dark" id="profileUsername">...</strong></p>
+                            <p class="mb-1 text-muted"><i class="bi bi-envelope"></i> Email: <strong class="text-dark" id="profileEmail">...</strong></p>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card h-100 border-top border-danger border-4">
-                            <div class="card-body">
-                                <span class="badge bg-danger mb-2">Kỳ thi chính thức (Contest)</span>
-                                <h5 class="fw-bold">Đề thi thử lần 1 - Lịch Sử</h5>
-                                <p class="text-muted small mb-3"><i class="bi bi-clock"></i> 45 Phút | <i class="bi bi-exclamation-triangle-fill text-warning"></i> Chỉ thi 1 lần</p>
-                                <button class="btn btn-theme w-100">Vào thi ngay</button>
+                    <div class="col-md-6 mb-4">
+                        <div class="card p-4 h-100 bg-success text-white">
+                            <h5 class="fw-bold"><i class="bi bi-trophy"></i> Thành tích học tập</h5>
+                            <div class="mt-3">
+                                <h2 class="display-4 fw-bold" id="totalExamsTaken">0</h2>
+                                <span>Đề thi đã hoàn thành</span>
+                            </div>
+                            <div class="mt-4">
+                                <h2 class="display-4 fw-bold" id="avgScore">0.0</h2>
+                                <span>Điểm trung bình hệ 10</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="history" style="display: none;">
-                <h4 class="fw-bold mb-4" style="color: var(--edu-blue);">LỊCH SỬ LÀM BÀI</h4>
-                <div class="card">
-                    <div class="card-body p-0 table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th>Đề thi</th>
-                                    <th>Loại</th>
-                                    <th>Thời gian nộp</th>
-                                    <th>Số câu đúng</th>
-                                    <th>Điểm (Hệ 10)</th>
-                                    <th class="text-end">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="fw-bold">Đề ôn tập THPT 12 - Lịch Sử</td>
-                                    <td><span class="badge bg-success">Practice</span></td>
-                                    <td>02/04/2026 08:35</td>
-                                    <td>32/40</td>
-                                    <td class="text-success fw-bold">8.00</td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-outline-primary" onclick="viewResultDetail(1, 'practice', 8.00)"><i class="bi bi-eye"></i> Xem chi tiết</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">Đề thi thử lần 1 - Lịch Sử</td>
-                                    <td><span class="badge bg-danger">Contest</span></td>
-                                    <td>02/04/2026 09:45</td>
-                                    <td>36/40</td>
-                                    <td class="text-success fw-bold">9.00</td>
-                                    <td class="text-end">
-                                        <button class="btn btn-sm btn-outline-primary" onclick="viewResultDetail(2, 'contest', 9.00)"><i class="bi bi-eye"></i> Xem kết quả</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div id="section-exams" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0" style="color: var(--edu-green);">Đề thi dành cho bạn</h4>
+                    <span class="badge bg-primary fs-6" id="availableExamsCount">Đang tải...</span>
+                </div>
+                
+                <div class="row" id="examGrid">
+                    <div class="col-12 text-center py-5 text-muted">
+                        <div class="spinner-border text-success"></div><br>Đang tải danh sách đề thi...
                     </div>
                 </div>
             </div>
 
-            <div class="modal fade" id="resultModal" tabindex="-1">
-                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header bg-light">
-                            <h5 class="modal-title fw-bold" style="color: var(--edu-blue);">Kết Quả Bài Thi</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body bg-light">
-                            <div class="text-center mb-4">
-                                <h1>Điểm số: <span id="modalScore" class="text-success fw-bold"></span></h1>
-                                <p id="modalNotice" class="text-muted"></p>
-                            </div>
-                            <div id="detailedResultArea"></div>
+            <div id="section-history" style="display: none;">
+                <h4 class="fw-bold mb-4" style="color: var(--edu-green);">Lịch sử Làm bài & Điểm số</h4>
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Mã Đề</th>
+                                        <th>Tên Đề Thi</th>
+                                        <th>Lần thi</th>
+                                        <th>Thời gian nộp</th>
+                                        <th class="text-end">Điểm số</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <tr><td colspan="5" class="text-center py-4">Đang tải dữ liệu...</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -134,131 +117,156 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // --------------------------------------------------------
     // KẾT NỐI SUPABASE
     // --------------------------------------------------------
-    const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
+	const SB_URL = 'https://hiksglmxbxmdcdpribex.supabase.co';
     const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhpa3NnbG14YnhtZGNkcHJpYmV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzAzNjksImV4cCI6MjA5MDY0NjM2OX0.ngXTd6lCbiYdfzkcBQX1pxP42vfMNxp02ddoKyrsuz4';
     const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
 
-    const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+    // ==========================================
+    // GIẢ LẬP ĐĂNG NHẬP: CHỈ LẤY DỮ LIỆU CỦA HS SỐ 36
+    // ==========================================
+    const MY_ACCOUNT_ID = 36;
 
+    // Hàm chuyển Tab
     function showSection(sectionId, element) {
-        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active')); 
         element.classList.add('active');
-        document.getElementById('exam-list').style.display = 'none';
-        document.getElementById('history').style.display = 'none';
+        ['section-home', 'section-exams', 'section-history'].forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
         document.getElementById(sectionId).style.display = 'block';
     }
 
-    // --------------------------------------------------------
-    // HÀM LẤY CHI TIẾT BÀI LÀM TỪ DATABASE
-    // --------------------------------------------------------
-    async function viewResultDetail(attemptId, examType, score) {
-        document.getElementById('modalScore').innerText = score;
-        const detailArea = document.getElementById('detailedResultArea');
-        const noticeArea = document.getElementById('modalNotice');
+    // Định dạng ngày giờ
+    function displayDate(isoString) { 
+        if (!isoString) return '<span class="text-muted">Không giới hạn</span>'; 
+        const d = new Date(isoString); 
+        return d.toLocaleDateString('vi-VN') + ' ' + d.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}); 
+    }
+
+    // 1. TẢI THÔNG TIN CÁ NHÂN (PROFILE)
+    async function loadProfile() {
+        const { data, error } = await _supabase.from('account').select('*').eq('accountid', MY_ACCOUNT_ID).single();
+        if (error || !data) {
+            alert("Lỗi tải thông tin cá nhân. Vui lòng kiểm tra lại ID 36 có tồn tại không.");
+            return;
+        }
         
-        resultModal.show(); // Hiện form lên ngay lập tức
+        document.getElementById('topNavName').innerText = `Xin chào, ${data.accountname}`;
+        document.getElementById('profileName').innerText = data.accountname;
+        document.getElementById('profileId').innerText = data.accountid;
+        document.getElementById('profileUsername').innerText = data.accountusername;
+        document.getElementById('profileEmail').innerText = data.accountemail;
+    }
+
+    // 2. TẢI DANH SÁCH ĐỀ THI CHO PHÉP LÀM
+    async function loadAvailableExams() {
+        // Lấy tất cả đề thi cùng với tên môn học
+        const { data: exams, error } = await _supabase.from('exam').select('*, subject(subjectname)').order('examid', { ascending: false });
         
-        if (examType === 'contest') {
-            noticeArea.innerHTML = "<i class='bi bi-shield-lock'></i> Vì đây là kỳ thi chính thức (Contest), chi tiết bài làm và đáp án đã bị ẩn để đảm bảo tính công bằng.";
-            detailArea.innerHTML = "";
-        } else {
-            // Hiển thị hiệu ứng đang tải
-            noticeArea.innerHTML = '<div class="spinner-border spinner-border-sm text-primary"></div> Đang tải dữ liệu từ máy chủ...';
-            detailArea.innerHTML = "";
+        const grid = document.getElementById('examGrid');
+        grid.innerHTML = '';
+        
+        if (error || !exams || exams.length === 0) {
+            grid.innerHTML = '<div class="col-12 text-center text-muted">Chưa có đề thi nào trong hệ thống.</div>';
+            document.getElementById('availableExamsCount').innerText = '0 Đề thi';
+            return;
+        }
 
-            try {
-                // 1. Tìm resultID tương ứng với attemptID
-                const { data: resultData, error: err1 } = await _supabase
-                    .from('result')
-                    .select('resultid')
-                    .eq('attemptid', attemptId)
-                    .single();
-                    
-                if (err1) throw err1;
+        document.getElementById('availableExamsCount').innerText = `${exams.length} Đề thi`;
 
-                // 2. Kéo toàn bộ chi tiết câu hỏi (kèm nội dung câu hỏi và nội dung đáp án đã chọn)
-                const { data: details, error: err2 } = await _supabase
-                    .from('detailed_result')
-                    .select(`
-                        questionid,
-                        iscorrect,
-                        question!inner(questiondesc),
-                        answer!inner(answerdesc)
-                    `)
-                    .eq('resultid', resultData.resultid);
+        exams.forEach(e => {
+            const subjectName = e.subject ? e.subject.subjectname : "Môn chung";
+            const typeBadge = e.examtype === 'contest' ? 'danger' : 'success';
+            
+            grid.innerHTML += `
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm p-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="badge bg-secondary">${subjectName}</span>
+                            <span class="badge bg-${typeBadge}">${e.examtype.toUpperCase()}</span>
+                        </div>
+                        <h5 class="fw-bold mt-2 text-dark">${e.examtitle}</h5>
+                        <p class="text-muted small mb-3"><i class="bi bi-stopwatch"></i> Thời gian: ${e.examduration} phút</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-outline-success w-100 fw-bold" onclick="alert('Tính năng làm bài sẽ được cập nhật sau!')"><i class="bi bi-play-circle-fill"></i> BẮT ĐẦU THI</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
 
-                if (err2) throw err2;
+    // 3. TẢI LỊCH SỬ THI VÀ TÍNH ĐIỂM TRUNG BÌNH
+    async function loadHistory() {
+        // Tìm toàn bộ lượt thi của ID 36 (Thông qua bảng Student -> Account)
+        // Lưu ý: Cú pháp inner Join này giả định bảng exam_attempt có cột studentid, 
+        // và studentid đó liên kết với accountid = 36. Nếu Database của bạn liên kết trực tiếp accountid ở exam_attempt, hãy sửa lại eq('accountid', MY_ACCOUNT_ID)
+        
+        const { data: attempts, error } = await _supabase.from('exam_attempt')
+            .select('attemptnumber, submittedtime, exam(examid, examtitle), student!inner(accountid), result(grade)')
+            .eq('student.accountid', MY_ACCOUNT_ID)
+            .eq('submitstatus', 'submitted')
+            .order('submittedtime', { ascending: false });
 
-                // 3. Tìm các đáp án ĐÚNG của những câu hỏi này (để hiện thị nếu học sinh làm sai)
-                const questionIds = details.map(d => d.questionid);
-                const { data: correctAnswers, error: err3 } = await _supabase
-                    .from('answer')
-                    .select('questionid, answerdesc')
-                    .in('questionid', questionIds)
-                    .eq('iscorrect', true);
+        const tbody = document.getElementById('historyTableBody');
+        tbody.innerHTML = '';
 
-                if (err3) throw err3;
+        if (error) {
+            console.error("Lỗi tải lịch sử:", error.message);
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Lỗi tải dữ liệu. Bạn hãy kiểm tra lại khóa ngoại.</td></tr>`;
+            return;
+        }
 
-                // Gộp các đáp án đúng vào một Object để tra cứu cho nhanh
-                const correctMap = {};
-                correctAnswers.forEach(ans => {
-                    correctMap[ans.questionid] = ans.answerdesc;
-                });
+        if (!attempts || attempts.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4">Bạn chưa hoàn thành bài thi nào.</td></tr>';
+            return;
+        }
 
-                // 4. Bắt đầu vẽ HTML
-                noticeArea.innerHTML = "Dưới đây là chi tiết bài làm của bạn. Các đáp án sai được bôi đỏ.";
-                let html = '';
+        let totalScore = 0;
+        let validScoresCount = 0;
 
-                details.forEach((item, index) => {
-                    const qDesc = item.question.questiondesc;
-                    const chosenAns = item.answer.answerdesc;
-                    const isCorrect = item.iscorrect;
-                    const realCorrectAns = correctMap[item.questionid] || "Đang cập nhật đáp án";
-
-                    if (isCorrect) {
-                        html += `
-                            <div class="card mb-3 border-0 shadow-sm result-correct">
-                                <div class="card-body">
-                                    <h6 class="fw-bold">Câu ${index + 1}: ${qDesc}</h6>
-                                    <div class="text-dark small mt-2">
-                                        <i class="bi bi-check-circle-fill text-success fs-5 align-middle"></i> 
-                                        Bạn chọn: ${chosenAns} <span class="fw-bold text-success">(Đúng)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        html += `
-                            <div class="card mb-3 border-0 shadow-sm result-wrong">
-                                <div class="card-body">
-                                    <h6 class="fw-bold">Câu ${index + 1}: ${qDesc}</h6>
-                                    <div class="text-dark small mt-2">
-                                        <i class="bi bi-x-circle-fill text-danger fs-5 align-middle"></i> 
-                                        Bạn chọn: ${chosenAns} <span class="fw-bold text-danger">(Sai)</span>
-                                        <br>
-                                        <div class="mt-2 p-2 bg-white rounded border border-success">
-                                            <span class="text-success fw-bold"><i class="bi bi-check2-square"></i> Đáp án đúng:</span> ${realCorrectAns}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-
-                detailArea.innerHTML = html;
-
-            } catch (error) {
-                console.error("Lỗi hệ thống:", error);
-                noticeArea.innerHTML = "<span class='text-danger fw-bold'><i class='bi bi-exclamation-triangle'></i> Lỗi tải dữ liệu. Hãy kiểm tra Console (F12) để xem chi tiết.</span>";
+        attempts.forEach(att => {
+            const examId = att.exam ? att.exam.examid : '-';
+            const examTitle = att.exam ? att.exam.examtitle : 'Đề thi đã bị xóa';
+            
+            // Xử lý điểm số
+            let scoreText = '<span class="text-muted">Chưa chấm</span>';
+            if (att.result && att.result.length > 0 && att.result[0].grade !== null) {
+                const grade = parseFloat(att.result[0].grade);
+                scoreText = `<strong class="${grade >= 5 ? 'text-success' : 'text-danger'} fs-5">${grade.toFixed(2)}</strong>`;
+                totalScore += grade;
+                validScoresCount++;
             }
+
+            tbody.innerHTML += `
+                <tr>
+                    <td class="text-muted fw-bold">#${examId}</td>
+                    <td class="fw-bold text-dark">${examTitle}</td>
+                    <td>Lần ${att.attemptnumber}</td>
+                    <td class="small">${displayDate(att.submittedtime)}</td>
+                    <td class="text-end">${scoreText}</td>
+                </tr>
+            `;
+        });
+
+        // Cập nhật lên Bảng Thống Kê ở Section 1
+        document.getElementById('totalExamsTaken').innerText = attempts.length;
+        if (validScoresCount > 0) {
+            const avg = (totalScore / validScoresCount).toFixed(2);
+            document.getElementById('avgScore').innerText = avg;
         }
     }
+
+    // KHỞI ĐỘNG HỆ THỐNG
+    window.onload = function() {
+        loadProfile();
+        loadAvailableExams();
+        loadHistory();
+    };
 </script>
 </body>
 </html>
